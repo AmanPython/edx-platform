@@ -1,18 +1,20 @@
 <div class="form-field <%- type %>-<%- name %>">
     <% if ( type !== 'checkbox' && type !== 'plaintext') { %>
-        <label for="<%- form %>-<%- name %>">
-            <span class="label-text"><%- label %></span>
-            <% if ( required && type !== 'hidden' ) { %>
-                <span id="<%- form %>-<%- name %>-required-label"
-                    class="label-required <% if ( !requiredStr ) { %>hidden<% } %>">
-                    <% if ( requiredStr ) { %><%- requiredStr %><% }%>
-                </span>
-                <span class="icon fa" id="<%- form %>-<%- name %>-validation-icon" aria-hidden="true"></span>
-            <% } %>
-            <% if ( !required && optionalStr && (type !== 'hidden') ) { %>
-                <span class="label-optional" id="<%- form %>-<%- name %>-optional-label"><%- optionalStr %></span>
-            <% } %>
-        </label>
+        <% if ( label !== '') { %>
+            <label for="<%- form %>-<%- name %>">
+                <span class="label-text"><%- label %></span>
+                <% if ( required && type !== 'hidden' ) { %>
+                    <span id="<%- form %>-<%- name %>-required-label"
+                        class="label-required <% if ( !requiredStr ) { %>hidden<% } %>">
+                        <% if ( requiredStr ) { %><%- requiredStr %><% }%>
+                    </span>
+                    <span class="icon fa" id="<%- form %>-<%- name %>-validation-icon" aria-hidden="true"></span>
+                <% } %>
+                <% if ( !required && optionalStr && (type !== 'hidden') ) { %>
+                    <span class="label-optional" id="<%- form %>-<%- name %>-optional-label"><%- optionalStr %></span>
+                <% } %>
+            </label>
+        <% } %>
         <% if (supplementalLink && supplementalText) { %>
             <div class="supplemental-link">
                 <a href="<%- supplementalLink %>" rel="noopener" target="_blank"><%- supplementalText %></a>
