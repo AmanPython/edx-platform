@@ -197,7 +197,7 @@ def validate_xml(xsd_filename, xml_filename):
         schema_root = etree.XML(f.read())
 
     schema = etree.XMLSchema(schema_root)
-    xmlparser = etree.XMLParser(schema=schema)
+    xmlparser = etree.XMLParser(schema=schema, resolve_entities=False)
 
     with open(xml_filename) as f:
         etree.fromstring(f.read(), xmlparser)
