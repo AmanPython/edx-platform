@@ -9,6 +9,7 @@ import threading
 from lxml import etree as _etree
 
 from defusedxml.lxml import DTDForbidden, EntitiesForbidden, NotSupportedError
+import lxml.etree
 
 LXML3 = _etree.LXML_VERSION[0] >= 3
 
@@ -117,7 +118,7 @@ def check_docinfo(elementtree, forbid_dtd=False, forbid_entities=True):
 def parse(source, parser=None, base_url=None, forbid_dtd=False, forbid_entities=True):  # pylint: disable=missing-function-docstring
     if parser is None:
         parser = getDefaultParser()
-    elementtree = _etree.parse(source, parser, base_url=base_url)
+    elementtree = _etree.parse(source, parser, base_url=base_url, parser=lxml.etree.XMLParser(resolve_entities=False))
     check_docinfo(elementtree, forbid_dtd, forbid_entities)
     return elementtree
 
@@ -125,7 +126,7 @@ def parse(source, parser=None, base_url=None, forbid_dtd=False, forbid_entities=
 def fromstring(text, parser=None, base_url=None, forbid_dtd=False, forbid_entities=True):  # pylint: disable=missing-function-docstring
     if parser is None:
         parser = getDefaultParser()
-    rootelement = _etree.fromstring(text, parser, base_url=base_url)
+    rootelement = _etree.fromstring(text, parser, base_url=base_url, parser=lxml.etree.XMLParser(resolve_entities=False))
     elementtree = rootelement.getroottree()
     check_docinfo(elementtree, forbid_dtd, forbid_entities)
     return rootelement

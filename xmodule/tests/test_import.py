@@ -22,6 +22,7 @@ from xmodule.modulestore.xml import ImportSystem, LibraryXMLModuleStore, XMLModu
 from xmodule.tests import DATA_DIR
 from xmodule.x_module import XModuleMixin
 from xmodule.xml_block import is_pointer_tag
+import lxml.etree
 
 ORG = 'test_org'
 COURSE = 'test_course'
@@ -214,7 +215,7 @@ class ImportTestCase(BaseCourseTestCase):  # lint-amnesty, pylint: disable=missi
 
         # Does the course still have unicorns?
         with block.runtime.export_fs.open(f'course/{course_run}.xml') as f:
-            course_xml = etree.fromstring(f.read())
+            course_xml = etree.fromstring(f.read(), parser=lxml.etree.XMLParser(resolve_entities=False))
 
         assert course_xml.attrib['unicorn'] == unicorn_color
 
@@ -228,7 +229,7 @@ class ImportTestCase(BaseCourseTestCase):  # lint-amnesty, pylint: disable=missi
         # Does the chapter tag now have a due attribute?
         # hardcoded path to child
         with block.runtime.export_fs.open('chapter/ch.xml') as f:
-            chapter_xml = etree.fromstring(f.read())
+            chapter_xml = etree.fromstring(f.read(), parser=lxml.etree.XMLParser(resolve_entities=False))
         assert chapter_xml.tag == 'chapter'
         assert 'due' not in chapter_xml.attrib
 
@@ -412,11 +413,11 @@ class ImportTestCase(BaseCourseTestCase):  # lint-amnesty, pylint: disable=missi
 
         for xml_str in yes:
             print(f"should be True for {xml_str}")
-            assert is_pointer_tag(etree.fromstring(xml_str))
+            assert is_pointer_tag(etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False)))
 
         for xml_str in no:
             print(f"should be False for {xml_str}")
-            assert not is_pointer_tag(etree.fromstring(xml_str))
+            assert not is_pointer_tag(etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False)))
 
     def test_metadata_inherit(self):
         """Make sure that metadata is inherited properly"""

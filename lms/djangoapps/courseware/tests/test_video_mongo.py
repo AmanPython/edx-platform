@@ -63,6 +63,7 @@ from openedx.core.djangolib.testing.utils import CacheIsolationTestCase
 
 from .test_video_handlers import BaseTestVideoXBlock, TestVideo
 from .test_video_xml import SOURCE_XML, PUBLIC_SOURCE_XML
+import lxml.etree
 
 TRANSCRIPT_FILE_SRT_DATA = """
 1
@@ -2024,7 +2025,7 @@ class VideoBlockTest(TestCase, VideoBlockTestBase):
             val_transcript_language_code=val_transcript_language_code,
             val_transcript_provider=val_transcript_provider
         )
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         id_generator = Mock()
         id_generator.target_course_id = "test_course_id"
         video = self.block.parse_xml(xml_object, module_system, None, id_generator)
@@ -2073,7 +2074,7 @@ class VideoBlockTest(TestCase, VideoBlockTestBase):
         Test that importing a video with no video id, creates a new external video.
         """
         xml_data = """<video><video_asset></video_asset></video>"""
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         module_system = DummySystem(load_error_blocks=True)
         id_generator = Mock()
 
@@ -2110,7 +2111,7 @@ class VideoBlockTest(TestCase, VideoBlockTestBase):
             val_transcript_language_code=val_transcript_language_code,
             val_transcript_provider=val_transcript_provider
         )
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         module_system = DummySystem(load_error_blocks=True)
         id_generator = Mock()
 
@@ -2265,7 +2266,7 @@ class VideoBlockTest(TestCase, VideoBlockTestBase):
             xml_data += val_transcripts
 
         xml_data += '</video_asset></video>'
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         # Verify edx_video_id is empty before import.
         assert self.block.edx_video_id == ''
@@ -2296,7 +2297,7 @@ class VideoBlockTest(TestCase, VideoBlockTestBase):
                 </video_asset>
             </video>
         """
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         with pytest.raises(ValCannotCreateError):
             VideoBlock.parse_xml(xml_object, module_system, None, id_generator=Mock())
         with pytest.raises(ValVideoNotFoundError):

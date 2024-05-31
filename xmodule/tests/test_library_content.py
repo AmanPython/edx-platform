@@ -28,6 +28,7 @@ from xmodule.capa_block import ProblemBlock
 from common.djangoapps.student.tests.factories import UserFactory
 
 from .test_course_block import DummySystem as TestImportSystem
+import lxml.etree
 
 dummy_render = lambda block, _: Fragment(block.data)  # pylint: disable=invalid-name
 
@@ -194,7 +195,7 @@ class TestLibraryContentExportImport(LibraryContentTest):
         assert exported_olx == self.expected_olx
 
         # Now import it.
-        olx_element = etree.fromstring(exported_olx)
+        olx_element = etree.fromstring(exported_olx, parser=lxml.etree.XMLParser(resolve_entities=False))
         imported_lc_block = LibraryContentBlock.parse_xml(olx_element, self.runtime, None, self.id_generator)
 
         self._verify_xblock_properties(imported_lc_block)
@@ -218,7 +219,7 @@ class TestLibraryContentExportImport(LibraryContentTest):
         )
 
         # Import the olx.
-        olx_element = etree.fromstring(olx_with_comments)
+        olx_element = etree.fromstring(olx_with_comments, parser=lxml.etree.XMLParser(resolve_entities=False))
         imported_lc_block = LibraryContentBlock.parse_xml(olx_element, self.runtime, None, self.id_generator)
 
         self._verify_xblock_properties(imported_lc_block)

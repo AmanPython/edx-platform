@@ -15,6 +15,7 @@ from xmodule.capa.inputtypes import Status
 from xmodule.capa.tests.helpers import capa_render_template
 from openedx.core.djangolib.markup import HTML
 from xmodule.stringify import stringify_children
+import lxml.etree
 
 
 class TemplateError(Exception):
@@ -72,7 +73,7 @@ class TemplateTestCase(unittest.TestCase):
         # We modify the string slightly by wrapping it in <test>
         # tags, to ensure it has one root element.
         try:
-            xml = etree.fromstring("<test>" + xml_str + "</test>")
+            xml = etree.fromstring("<test>" + xml_str + "</test>", parser=lxml.etree.XMLParser(resolve_entities=False))
         except Exception as exc:
             raise TemplateError("Could not parse XML from '{0}': {1}".format(  # lint-amnesty, pylint: disable=raise-missing-from
                                 xml_str, str(exc)))

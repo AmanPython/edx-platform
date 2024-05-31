@@ -70,6 +70,7 @@ from .transcripts_utils import (
 from .video_handlers import VideoStudentViewHandlers, VideoStudioViewHandlers
 from .video_utils import create_youtube_string, format_xml_exception_message, get_poster, rewrite_video_url
 from .video_xfields import VideoFields
+import lxml.etree
 
 # The following import/except block for edxval is temporary measure until
 # edxval is a proper XBlock Runtime Service.
@@ -990,7 +991,7 @@ class VideoBlock(
             id_generator is used to generate course-specific urls and identifiers
         """
         if isinstance(xml, str):
-            xml = etree.fromstring(xml)
+            xml = etree.fromstring(xml, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         field_data = {}
 

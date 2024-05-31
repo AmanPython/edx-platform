@@ -37,6 +37,7 @@ from xmodule.capa.checker import DemoSystem
 from xmodule.capa.tests.helpers import test_capa_system
 from xmodule.capa.xqueue_interface import XQUEUE_TIMEOUT
 from openedx.core.djangolib.markup import HTML
+import lxml.etree
 
 # just a handy shortcut
 lookup_tag = inputtypes.registry.get_class_for_tag
@@ -63,7 +64,7 @@ class OptionInputTest(unittest.TestCase):
 
     def test_rendering(self):
         xml_str = """<optioninput options="('Up','Down','Don't know')" id="sky_input" correct="Up"/>"""
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         state = {
             'value': 'Down',
@@ -129,7 +130,7 @@ class ChoiceGroupTest(unittest.TestCase):
     <choice correct="false" name="foil4">This is <b>foil</b> Four.</choice>
   </{tag}>
         """.format(tag=tag)
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         state = {
             'value': 'foil3',
@@ -228,7 +229,7 @@ class JSInputTest(unittest.TestCase):
         """
         Helper method for testing context based on the provided XML string.
         """
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
         state = {
             'value': 103,
             'response_data': RESPONSE_DATA
@@ -264,7 +265,7 @@ class TextLineTest(unittest.TestCase):
         size = "42"
         xml_str = """<textline id="prob_1_2" size="{size}"/>""".format(size=size)
 
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         state = {
             'value': 'BumbleBee',
@@ -300,7 +301,7 @@ class TextLineTest(unittest.TestCase):
         preprocessorClassName="{pp}"
         preprocessorSrc="{sc}"/>""".format(size=size, pp=preprocessorClass, sc=script)
 
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         state = {
             'value': 'BumbleBee',
@@ -348,7 +349,7 @@ class TextLineTest(unittest.TestCase):
                             trailing_text="{tt}"
                             />""".format(size=size, tt=xml_text)
 
-            element = etree.fromstring(xml_str)
+            element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
             state = {
                 'value': 'BumbleBee',
@@ -391,7 +392,7 @@ class FileSubmissionTest(unittest.TestCase):
         />""".format(af=allowed_files,
                      rf=required_files,)
 
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         state = {
             'value': 'BumbleBee.py',
@@ -440,7 +441,7 @@ class CodeInputTest(unittest.TestCase):
         tabsize="{ts}"
         />""".format(m=mode, c=cols, r=rows, ln=linenumbers, ts=tabsize)
 
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         state = {
             'value': 'print "good evening"',
@@ -501,7 +502,7 @@ class MatlabTest(unittest.TestCase):
                                      m=self.mode,
                                      payload=self.payload,
                                      ln=self.linenumbers)
-        elt = etree.fromstring(self.xml)
+        elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
         state = {
             'value': 'print "good evening"',
             'status': 'incomplete',
@@ -545,7 +546,7 @@ class MatlabTest(unittest.TestCase):
             'feedback': {'message': '3'},
             'response_data': RESPONSE_DATA
         }
-        elt = etree.fromstring(self.xml)
+        elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         the_input = self.input_class(test_capa_system(), elt, state)
         context = the_input._get_render_context()  # pylint: disable=protected-access
@@ -580,7 +581,7 @@ class MatlabTest(unittest.TestCase):
                 'input_state': {},
                 'response_data': RESPONSE_DATA
             }
-            elt = etree.fromstring(self.xml)
+            elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
             prob_id = 'prob_1_2'
             the_input = self.input_class(test_capa_system(), elt, state)
             context = the_input._get_render_context()  # pylint: disable=protected-access
@@ -614,7 +615,7 @@ class MatlabTest(unittest.TestCase):
             'input_state': {'queuestate': 'queued', 'queuetime': 5},
             'response_data': RESPONSE_DATA
         }
-        elt = etree.fromstring(self.xml)
+        elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
         prob_id = 'prob_1_2'
         the_input = self.input_class(test_capa_system(), elt, state)
         context = the_input._get_render_context()  # pylint: disable=protected-access
@@ -666,7 +667,7 @@ class MatlabTest(unittest.TestCase):
                  'status': 'incomplete',
                  'input_state': input_state,
                  'feedback': {'message': '3'}, }
-        elt = etree.fromstring(self.xml)
+        elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         the_input = self.input_class(test_capa_system(), elt, state)
         inner_msg = 'hello!'
@@ -685,7 +686,7 @@ class MatlabTest(unittest.TestCase):
                  'status': 'incomplete',
                  'input_state': input_state,
                  'feedback': {'message': '3'}, }
-        elt = etree.fromstring(self.xml)
+        elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         the_input = self.input_class(test_capa_system(), elt, state)
         inner_msg = 'hello!'
@@ -700,7 +701,7 @@ class MatlabTest(unittest.TestCase):
     def test_matlab_response_timeout_not_exceeded(self, time):  # lint-amnesty, pylint: disable=unused-argument
 
         state = {'input_state': {'queuestate': 'queued', 'queuetime': 5}}
-        elt = etree.fromstring(self.xml)
+        elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         the_input = self.input_class(test_capa_system(), elt, state)
         assert the_input.status == 'queued'
@@ -709,7 +710,7 @@ class MatlabTest(unittest.TestCase):
     def test_matlab_response_timeout_exceeded(self, time):  # lint-amnesty, pylint: disable=unused-argument
 
         state = {'input_state': {'queuestate': 'queued', 'queuetime': 5}}
-        elt = etree.fromstring(self.xml)
+        elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         the_input = self.input_class(test_capa_system(), elt, state)
         assert the_input.status == 'unsubmitted'
@@ -721,7 +722,7 @@ class MatlabTest(unittest.TestCase):
         Test if problem was saved before queuetime was introduced.
         """
         state = {'input_state': {'queuestate': 'queued'}}
-        elt = etree.fromstring(self.xml)
+        elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         the_input = self.input_class(test_capa_system(), elt, state)
         assert the_input.status == 'unsubmitted'
@@ -730,7 +731,7 @@ class MatlabTest(unittest.TestCase):
         """
         Test that api_key ends up in the xqueue payload
         """
-        elt = etree.fromstring(self.xml)
+        elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
         system = test_capa_system()
         system.matlab_api_key = 'test_api_key'
         the_input = lookup_tag('matlabinput')(system, elt, {})
@@ -850,7 +851,7 @@ class MatlabTest(unittest.TestCase):
             'feedback': {'message': '3'},
             'response_data': RESPONSE_DATA
         }
-        elt = etree.fromstring(self.xml)
+        elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         the_input = self.input_class(test_capa_system(), elt, state)
         context = the_input._get_render_context()  # pylint: disable=protected-access
@@ -900,7 +901,7 @@ class MatlabTest(unittest.TestCase):
                 'input_state': {'queue_msg': queue_msg},
                 'status': 'queued',
             }
-            elt = etree.fromstring(self.xml)
+            elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
             the_input = self.input_class(test_capa_system(), elt, state)
             assert the_input.queue_msg == queue_msg
 
@@ -914,7 +915,7 @@ class MatlabTest(unittest.TestCase):
             'input_state': {'queue_msg': queue_msg},
             'status': 'queued',
         }
-        elt = etree.fromstring(self.xml)
+        elt = etree.fromstring(self.xml, parser=lxml.etree.XMLParser(resolve_entities=False))
         the_input = self.input_class(test_capa_system(), elt, state)
         expected = "&lt;script&gt;Test message&lt;/script&gt;"
         assert the_input.queue_msg == expected
@@ -965,7 +966,7 @@ class SchematicTest(unittest.TestCase):
         />""".format(h=height, w=width, p=parts, a=analyses,
                      iv=initial_value, sa=submit_analyses)
 
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         value = 'three resistors and an oscilating pendulum'
         state = {
@@ -1013,7 +1014,7 @@ class ImageInputTest(unittest.TestCase):
         width="{w}"
         />""".format(s=src, h=height, w=width)
 
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         state = {
             'value': value,
@@ -1070,7 +1071,7 @@ class CrystallographyTest(unittest.TestCase):
         width="{w}"
         />""".format(h=height, w=width)
 
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         value = 'abc'
         state = {
@@ -1115,7 +1116,7 @@ class VseprTest(unittest.TestCase):
         geometries="{g}"
         />""".format(h=height, w=width, m=molecules, g=geometries)
 
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         value = 'abc'
         state = {
@@ -1154,7 +1155,7 @@ class ChemicalEquationTest(unittest.TestCase):
         self.size = "42"
         xml_str = """<chemicalequationinput id="prob_1_2" size="{size}"/>""".format(size=self.size)
 
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         state = {
             'value': 'H2OYeah',
@@ -1249,7 +1250,7 @@ class FormulaEquationTest(unittest.TestCase):
         self.size = "42"
         xml_str = """<formulaequationinput id="prob_1_2" size="{size}"/>""".format(size=self.size)
 
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         state = {
             'value': 'x^2+1/2',
@@ -1299,7 +1300,7 @@ class FormulaEquationTest(unittest.TestCase):
                             trailing_text="{tt}"
                             />""".format(size=size, tt=xml_text)
 
-            element = etree.fromstring(xml_str)
+            element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
             state = {
                 'value': 'x^2+1/2',
@@ -1412,7 +1413,7 @@ class DragAndDropTest(unittest.TestCase):
         </drag_and_drop_input>
         """.format(path=path_to_images)
 
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         value = 'abc'
         state = {
@@ -1481,7 +1482,7 @@ class AnnotationInputTest(unittest.TestCase):
     </options>
 </annotationinput>
 '''
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         value = {"comment": "blah blah", "options": [1]}
         json_value = json.dumps(value)
@@ -1558,7 +1559,7 @@ class TestChoiceText(unittest.TestCase):
       <choice correct="true" name="choiceinput_1">Is a number<decoy_input name="choiceinput_1_textinput_0"/><text>!</text></choice>
   </{tag}>
         """.format(tag=tag, choice_tag=choice_tag)
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
         prob_id = 'choicetext_input'
         state = {
             'value': '{}',

@@ -25,6 +25,7 @@ from common.djangoapps.third_party_auth.models import OAuth2ProviderConfig, SAML
 from openedx.core.djangolib.markup import Text
 
 from . import provider
+import lxml.etree
 
 SAML_XML_NS = 'urn:oasis:names:tc:SAML:2.0:metadata'  # The SAML Metadata XML namespace
 
@@ -50,7 +51,7 @@ def fetch_metadata_xml(url):
 
         try:
             parser = etree.XMLParser(remove_comments=True)
-            xml = etree.fromstring(response.content, parser)
+            xml = etree.fromstring(response.content, parser, parser=lxml.etree.XMLParser(resolve_entities=False))
         except etree.XMLSyntaxError:  # lint-amnesty, pylint: disable=try-except-raise
             raise
         # TODO: Can use OneLogin_Saml2_Utils to validate signed XML if anyone is using that
