@@ -133,7 +133,7 @@ class StubLtiHandler(StubHttpRequestHandler):
         }
 
         # Send request ignoring verifirecation of SSL certificate
-        response = requests.post(url, data=data, headers=headers, verify=False)
+        response = requests.post(url, data=data, headers=headers, verify=True)
 
         self.server.grade_data['TC answer'] = response.content
         return response
@@ -186,7 +186,7 @@ class StubLtiHandler(StubHttpRequestHandler):
         }
 
         # Send request ignoring verifirecation of SSL certificate
-        response = requests.put(new_url, data=payload, headers=headers, verify=False)
+        response = requests.put(new_url, data=payload, headers=headers, verify=True)
         self.server.grade_data['status_code'] = response.status_code
         self.server.grade_data['TC answer'] = response.content
         return response
