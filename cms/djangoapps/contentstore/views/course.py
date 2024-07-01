@@ -4,7 +4,6 @@ Views related to operations on course objects
 import copy
 import json
 import logging
-import random
 import re
 import string
 from collections import defaultdict
@@ -122,6 +121,7 @@ from ..utils import (
     update_course_discussions_settings,
 )
 from .component import ADVANCED_COMPONENT_TYPES
+import secrets
 
 log = logging.getLogger(__name__)
 User = get_user_model()
@@ -1380,10 +1380,10 @@ def assign_textbook_id(textbook, used_ids=()):
     tid = BlockUsageLocator.clean(textbook["tab_title"])
     if not tid[0].isdigit():
         # stick a random digit in front
-        tid = random.choice(string.digits) + tid
+        tid = secrets.choice(string.digits) + tid
     while tid in used_ids:
         # add a random ASCII character to the end
-        tid = tid + random.choice(string.ascii_lowercase)
+        tid = tid + secrets.choice(string.ascii_lowercase)
     return tid
 
 

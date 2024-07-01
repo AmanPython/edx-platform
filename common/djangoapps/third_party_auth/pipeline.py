@@ -66,7 +66,6 @@ from collections import OrderedDict
 from logging import getLogger
 from smtplib import SMTPException
 from uuid import uuid4
-from random import randint
 
 import six
 import social_django
@@ -103,6 +102,7 @@ from common.djangoapps.track import segment
 from common.djangoapps.util.json_request import JsonResponse
 
 from . import provider
+import secrets
 
 # These are the query string params you can pass
 # to the URL that starts the authentication process.
@@ -1009,7 +1009,7 @@ def get_username(strategy, details, backend, user=None, *args, **kwargs):  # lin
         while len(final_username) < min_length or user_exists({'username': final_username}):
             # try to use at least 3 characters to avoid weird '-1' '-a' etc
             # use less than 3 if that is whats being asked for
-            this_uuid_length = randint(min(uuid_length, 3), uuid_length)
+            this_uuid_length = secrets.SystemRandom().randint(min(uuid_length, 3), uuid_length)
             short_username = (input_username[:max_length - (this_uuid_length + 1)]  # +1 for the '-'
                               if max_length is not None
                               else username)

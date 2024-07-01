@@ -1,8 +1,6 @@
 """
 Tests for `send_segment_events_for_failed_learners` management command.
 """
-
-import random
 from datetime import timedelta
 from unittest import mock
 from unittest.mock import patch
@@ -22,6 +20,7 @@ from lms.djangoapps.grades.management.commands.send_segment_events_for_failed_le
 )
 from lms.djangoapps.grades.models import PersistentCourseGrade
 from openedx.core.djangoapps.content.course_overviews.tests.factories import CourseOverviewFactory
+import secrets
 
 
 @ddt.ddt
@@ -55,7 +54,7 @@ class TestSendSegmentEventsForFailedLearnersCommand(SharedModuleStoreTestCase):
 
         for user in cls.users:
             for course_overview in cls.course_overviews:
-                CourseEnrollment.enroll(user, course_overview.id, mode=random.choice(enrollment_modes))
+                CourseEnrollment.enroll(user, course_overview.id, mode=secrets.choice(enrollment_modes))
                 params = [
                     {
                         "user_id": user.id,
@@ -75,7 +74,7 @@ class TestSendSegmentEventsForFailedLearnersCommand(SharedModuleStoreTestCase):
                     },
                 ]
                 # randomly create passed and failed grades
-                PersistentCourseGrade.objects.create(**random.choice(params))
+                PersistentCourseGrade.objects.create(**secrets.choice(params))
 
     def construct_event_call_data(self):
         """

@@ -2,7 +2,6 @@
 
 
 import json
-import random
 
 
 from cms.djangoapps.contentstore.tests.utils import CourseTestCase
@@ -13,6 +12,7 @@ from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase  # lint-a
 from xmodule.modulestore.tests.factories import CourseFactory, BlockFactory  # lint-amnesty, pylint: disable=wrong-import-order
 from xmodule.tabs import CourseTabList  # lint-amnesty, pylint: disable=wrong-import-order
 from xmodule.x_module import STUDENT_VIEW  # lint-amnesty, pylint: disable=wrong-import-order
+import secrets
 
 
 class TabsPageTests(CourseTestCase):
@@ -83,7 +83,7 @@ class TabsPageTests(CourseTestCase):
         assert num_orig_tabs >= 5
 
         # Randomise the order of static tabs, leave the rest intact
-        course_tabs.sort(key=lambda tab: (100 + random.random()) if tab.type == 'static_tab' else tab.priority)
+        course_tabs.sort(key=lambda tab: (100 + secrets.SystemRandom().random()) if tab.type == 'static_tab' else tab.priority)
 
         tabs_data = [
             {'tab_locator': str(self.course.id.make_usage_key("static_tab", tab.url_slug))}

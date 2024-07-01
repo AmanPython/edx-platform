@@ -2,7 +2,6 @@
 
 import datetime
 import os
-import random
 import unittest
 from unittest import mock
 
@@ -16,6 +15,7 @@ from xmodule.modulestore.split_mongo.split import SplitMongoModuleStore
 from xmodule.modulestore.tests.mongo_connection import MONGO_HOST, MONGO_PORT_NUM
 from xmodule.modulestore.tests.utils import MemoryCache
 from xmodule.x_module import XModuleMixin
+import secrets
 
 
 @pytest.mark.mongo
@@ -52,7 +52,7 @@ class SplitWMongoCourseBootstrapper(unittest.TestCase):
     split_course_key = CourseLocator('test_org', 'test_course', 'runid', branch=ModuleStoreEnum.BranchName.draft)
 
     def setUp(self):
-        self.user_id = random.getrandbits(32)
+        self.user_id = secrets.SystemRandom().getrandbits(32)
         super().setUp()
         self.split_mongo = SplitMongoModuleStore(
             None,

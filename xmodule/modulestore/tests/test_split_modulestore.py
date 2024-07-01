@@ -5,7 +5,6 @@
 
 import datetime
 import os
-import random
 import re
 import unittest
 from importlib import import_module
@@ -42,6 +41,7 @@ from xmodule.modulestore.tests.mongo_connection import MONGO_HOST, MONGO_PORT_NU
 from xmodule.modulestore.tests.test_modulestore import check_has_course_method
 from xmodule.tabs import CourseTab
 from xmodule.x_module import XModuleMixin
+import secrets
 
 BRANCH_NAME_DRAFT = ModuleStoreEnum.BranchName.draft
 BRANCH_NAME_PUBLISHED = ModuleStoreEnum.BranchName.published
@@ -502,7 +502,7 @@ class SplitModuleTest(unittest.TestCase):
 
     def setUp(self):
         super().setUp()
-        self.user_id = random.getrandbits(32)
+        self.user_id = secrets.SystemRandom().getrandbits(32)
 
     def tearDown(self):
         """
@@ -782,7 +782,7 @@ class TestCourseStructureCache(CacheIsolationMixin, SplitModuleTest):
 
     def setUp(self):
         # make a new course:
-        self.user = random.getrandbits(32)
+        self.user = secrets.SystemRandom().getrandbits(32)
         self.new_course = modulestore().create_course(
             'org', 'course', 'test_run', self.user, BRANCH_NAME_DRAFT,
         )
@@ -1289,7 +1289,7 @@ class TestItemCrud(SplitModuleTest):
         Test create_item using bulk_operations
         """
         # start transaction w/ simple creation
-        user = random.getrandbits(32)
+        user = secrets.SystemRandom().getrandbits(32)
         course_key = CourseLocator('test_org', 'test_transaction', 'test_run')
         with modulestore().bulk_operations(course_key):
             new_course = modulestore().create_course('test_org', 'test_transaction', 'test_run', user, BRANCH_NAME_DRAFT)  # lint-amnesty, pylint: disable=line-too-long
@@ -1368,7 +1368,7 @@ class TestItemCrud(SplitModuleTest):
         """
 
         # start transaction w/ simple creation
-        user = random.getrandbits(32)
+        user = secrets.SystemRandom().getrandbits(32)
         course_key = CourseLocator('test_org', 'test_transaction', 'test_run')
         with modulestore().bulk_operations(course_key):
             modulestore().create_course('test_org', 'test_transaction', 'test_run', user, BRANCH_NAME_DRAFT)
@@ -1587,7 +1587,7 @@ class TestItemCrud(SplitModuleTest):
         """
         # Set up the split module store
         store = modulestore()
-        user = random.getrandbits(32)
+        user = secrets.SystemRandom().getrandbits(32)
         course_key = CourseLocator('test_org', 'test_transaction', 'test_run')
         with store.bulk_operations(course_key):
             new_course = store.create_course('test_org', 'test_transaction', 'test_run', user, BRANCH_NAME_DRAFT)
@@ -1749,7 +1749,7 @@ class TestCourseCreation(SplitModuleTest):
         """
         Test create_course with a specified root id and category
         """
-        user = random.getrandbits(32)
+        user = secrets.SystemRandom().getrandbits(32)
         new_course = modulestore().create_course(
             'test_org', 'test_transaction', 'test_run', user, BRANCH_NAME_DRAFT,
             root_block_id='top', root_category='chapter'
@@ -1769,7 +1769,7 @@ class TestCourseCreation(SplitModuleTest):
         """
         Test create_course rejects duplicate id
         """
-        user = random.getrandbits(32)
+        user = secrets.SystemRandom().getrandbits(32)
         courses = modulestore().get_courses(BRANCH_NAME_DRAFT)
         with pytest.raises(DuplicateCourseError):
             dupe_course_key = courses[0].location.course_key
@@ -1784,7 +1784,7 @@ class TestCourseCreation(SplitModuleTest):
         # create 3 courses before bulk operation
         split_store = modulestore()
 
-        user = random.getrandbits(32)
+        user = secrets.SystemRandom().getrandbits(32)
         to_be_created = split_store.make_course_key('new', 'created', 'course')
         with split_store.bulk_operations(to_be_created):
             split_store.create_course(

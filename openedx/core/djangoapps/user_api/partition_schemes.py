@@ -4,12 +4,12 @@ Provides partition support to the user service.
 
 
 import logging
-import random
 
 from eventtracking import tracker
 
 import openedx.core.djangoapps.user_api.course_tag.api as course_tag_api
 from xmodule.partitions.partitions import NoSuchUserPartitionGroupError, UserPartitionError  # lint-amnesty, pylint: disable=wrong-import-order
+import secrets
 
 log = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ class RandomUserPartitionScheme:
     """
     This scheme randomly assigns users into the partition's groups.
     """
-    RANDOM = random.Random()
+    RANDOM = secrets.SystemRandom().Random()
 
     @classmethod
     def get_group_for_user(cls, course_key, user, user_partition, assign=True):

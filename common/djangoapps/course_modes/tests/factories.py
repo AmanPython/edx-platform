@@ -2,9 +2,6 @@
 Factories for course mode models.
 """
 
-
-import random
-
 from factory import lazy_attribute
 from factory.django import DjangoModelFactory
 from opaque_keys.edx.keys import CourseKey
@@ -12,6 +9,7 @@ from opaque_keys.edx.keys import CourseKey
 from common.djangoapps.course_modes.models import CourseMode
 from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
 from openedx.core.djangoapps.content.course_overviews.tests.factories import CourseOverviewFactory
+import secrets
 
 
 # Factories are self documenting
@@ -57,7 +55,7 @@ class CourseModeFactory(DjangoModelFactory):  # lint-amnesty, pylint: disable=mi
     @lazy_attribute
     def min_price(self):
         if CourseMode.is_verified_slug(self.mode_slug):
-            return random.randint(1, 100)
+            return secrets.SystemRandom().randint(1, 100)
         return 0
 
     @lazy_attribute

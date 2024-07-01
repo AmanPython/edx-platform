@@ -3,7 +3,6 @@ Tests for the course tab API.
 """
 
 import json
-import random
 from urllib.parse import urlencode
 
 import ddt
@@ -14,6 +13,7 @@ from xmodule.tabs import CourseTabList
 
 from cms.djangoapps.contentstore.tests.utils import CourseTestCase
 from cms.djangoapps.contentstore.toggles import ENABLE_NEW_STUDIO_CUSTOM_PAGES
+import secrets
 
 
 @override_waffle_flag(ENABLE_NEW_STUDIO_CUSTOM_PAGES, active=True)
@@ -108,7 +108,7 @@ class TabsAPITests(CourseTestCase):
         assert num_orig_tabs >= 5
 
         # Randomize the order of static tabs, leaving the rest intact
-        course_tabs.sort(key=lambda tab: (100 + random.random()) if tab.type == 'static_tab' else tab.priority)
+        course_tabs.sort(key=lambda tab: (100 + secrets.SystemRandom().random()) if tab.type == 'static_tab' else tab.priority)
 
         tabs_data = [
             {'tab_locator': str(self.course.id.make_usage_key("static_tab", tab.url_slug))}

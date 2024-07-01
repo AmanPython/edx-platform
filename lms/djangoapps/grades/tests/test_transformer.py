@@ -4,7 +4,6 @@ Test the behavior of the GradesTransformer
 
 
 import datetime
-import random
 from copy import deepcopy
 
 import ddt
@@ -19,6 +18,7 @@ from lms.djangoapps.course_blocks.transformers.tests.helpers import CourseStruct
 from openedx.core.djangoapps.content.block_structure.api import clear_course_from_cache
 
 from ..transformer import GradesTransformer
+import secrets
 
 
 @ddt.ddt
@@ -442,7 +442,7 @@ class MultiProblemModulestoreAccessTestCase(CourseStructureTestCase, SharedModul
                 '#children': [],
             },
         ]
-        for problem_number in range(random.randrange(10, 20)):
+        for problem_number in range(secrets.SystemRandom().randrange(10, 20)):
             course[0]['#children'].append(
                 {
                     'metadata': {

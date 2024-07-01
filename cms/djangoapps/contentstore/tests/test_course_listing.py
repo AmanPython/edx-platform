@@ -2,9 +2,6 @@
 Unit tests for getting the list of courses for a user through iterating all courses and
 by reversing group name formats.
 """
-
-
-import random
 from unittest.mock import Mock, patch
 
 import ddt
@@ -39,6 +36,7 @@ from xmodule.course_block import CourseSummary  # lint-amnesty, pylint: disable=
 from xmodule.modulestore import ModuleStoreEnum  # lint-amnesty, pylint: disable=wrong-import-order
 from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase  # lint-amnesty, pylint: disable=wrong-import-order
 from xmodule.modulestore.tests.factories import CourseFactory, check_mongo_calls  # lint-amnesty, pylint: disable=wrong-import-order
+import secrets
 
 TOTAL_COURSES_COUNT = 10
 USER_COURSES_COUNT = 1
@@ -246,7 +244,7 @@ class TestCourseListing(ModuleStoreTestCase):
         reversing django groups
         """
         # create list of random course numbers which will be accessible to the user
-        user_course_ids = random.sample(list(range(TOTAL_COURSES_COUNT)), USER_COURSES_COUNT)
+        user_course_ids = secrets.SystemRandom().sample(list(range(TOTAL_COURSES_COUNT)), USER_COURSES_COUNT)
 
         # create courses and assign those to the user which have their number in user_course_ids
         for number in range(TOTAL_COURSES_COUNT):

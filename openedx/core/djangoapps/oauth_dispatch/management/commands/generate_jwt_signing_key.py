@@ -6,7 +6,6 @@ Management command for generating an asymmetric keypair to sign JSON Web Tokens.
 
 import json
 import logging
-import random
 import string
 from argparse import RawTextHelpFormatter
 
@@ -15,6 +14,7 @@ from Cryptodome.PublicKey import RSA
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from jwt.algorithms import get_default_algorithms
+import secrets
 
 log = logging.getLogger(__name__)
 
@@ -118,7 +118,7 @@ class Command(BaseCommand):
                 yaml.safe_dump(jwt_auth_data, stream=f_out)
 
     def _generate_key_id(self, size, chars=string.ascii_uppercase + string.digits):
-        return ''.join(random.choice(chars) for _ in range(size))
+        return ''.join(secrets.choice(chars) for _ in range(size))
 
     def _generate_key_pair(self, key_size, key_id):
         log.info('Generating new JWT signing keypair for key id %s.', key_id)
