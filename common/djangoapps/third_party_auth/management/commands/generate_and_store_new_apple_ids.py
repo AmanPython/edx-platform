@@ -88,7 +88,7 @@ class Command(BaseCommand):
             "Content-Type": "application/x-www-form-urlencoded",
             "Host": "appleid.apple.com"
         }
-        response = requests.post(access_token_url, data=payload, headers=headers)
+        response = requests.post(access_token_url, data=payload, headers=headers, timeout=60)
         access_token = response.json().get('access_token')
         return access_token
 
@@ -119,7 +119,7 @@ class Command(BaseCommand):
             "client_secret": self.client_secret,
             "transfer_sub": transfer_id
         }
-        response = requests.post(migration_url, data=payload, headers=headers)
+        response = requests.post(migration_url, data=payload, headers=headers, timeout=60)
         if response.status_code == 400:
             error = response.json().get('error')
             if error in [INVALID_GRANT_ERROR, INVALID_CLIENT_ERROR]:

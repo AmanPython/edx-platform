@@ -28,7 +28,7 @@ def proxy(request):
         print('Cached rss: %s' % rss)
         if not rss:
             # Go get the RSS from the URL if it was not cached
-            resp = requests.get(url)
+            resp = requests.get(url, timeout=60)
             status_code = resp.status_code
             if status_code == 200:
                 # Cache RSS

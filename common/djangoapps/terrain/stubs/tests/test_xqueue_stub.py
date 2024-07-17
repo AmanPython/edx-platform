@@ -141,7 +141,7 @@ class StubXQueueServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disable
             'xqueue_body': xqueue_body
         }
 
-        resp = requests.post(self.url, data=grade_request)
+        resp = requests.post(self.url, data=grade_request, timeout=60)
 
         # Expect that the response is success
         assert resp.status_code == 200

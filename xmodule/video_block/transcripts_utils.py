@@ -180,7 +180,7 @@ def get_transcript_link_from_youtube(youtube_id):
     """
     youtube_url_base = settings.YOUTUBE['TRANSCRIPTS']['YOUTUBE_URL_BASE']
     try:
-        youtube_html = requests.get(f"{youtube_url_base}{youtube_id}")
+        youtube_html = requests.get(f"{youtube_url_base}{youtube_id}", timeout=60)
         caption_re = settings.YOUTUBE['TRANSCRIPTS']['CAPTION_TRACKS_REGEX']
         allowed_language_codes = settings.YOUTUBE['TRANSCRIPTS']['ALLOWED_LANGUAGE_CODES']
         caption_matched = re.search(caption_re, youtube_html.content.decode("utf-8"))
@@ -215,7 +215,7 @@ def get_transcripts_from_youtube(youtube_id, settings, i18n, youtube_transcript_
         )
         raise GetTranscriptsFromYouTubeException(msg)
 
-    data = requests.get(transcript_link)
+    data = requests.get(transcript_link, timeout=60)
 
     if data.status_code != 200 or not data.text:
         msg = _("Can't receive transcripts from Youtube for {youtube_id}. Status code: {status_code}.").format(

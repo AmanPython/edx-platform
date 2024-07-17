@@ -20,14 +20,14 @@ class StubYouTubeServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disabl
         self.addCleanup(self.server.shutdown)
 
     def test_unused_url(self):
-        response = requests.get(self.url + 'unused_url')
+        response = requests.get(self.url + 'unused_url', timeout=60)
         assert b'Unused url' == response.content
 
     @unittest.skip('Failing intermittently due to inconsistent responses from YT. See TE-871')
     def test_video_url(self):
         response = requests.get(
-            self.url + 'test_youtube/OEoXaMPEzfM?v=2&alt=jsonc&callback=callback_func'
-        )
+            self.url + 'test_youtube/OEoXaMPEzfM?v=2&alt=jsonc&callback=callback_func', 
+        timeout=60)
 
         # YouTube metadata for video `OEoXaMPEzfM` states that duration is 116.
         assert b'callback_func({"data": {"duration": 116, "message": "I\'m youtube.", "id": "OEoXaMPEzfM"}})' ==\
@@ -35,8 +35,8 @@ class StubYouTubeServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disabl
 
     def test_transcript_url_equal(self):
         response = requests.get(
-            self.url + 'test_transcripts_youtube/t__eq_exist'
-        )
+            self.url + 'test_transcripts_youtube/t__eq_exist', 
+        timeout=60)
 
         assert ''.join(['<?xml version="1.0" encoding="utf-8" ?>',
                         '<transcript><text start="1.0" dur="1.0">',
@@ -45,7 +45,7 @@ class StubYouTubeServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disabl
     def test_transcript_url_not_equal(self):
         response = requests.get(
             self.url + 'test_transcripts_youtube/t_neq_exist',
-        )
+        timeout=60)
 
         assert ''.join(['<?xml version="1.0" encoding="utf-8" ?>',
                         '<transcript><text start="1.1" dur="5.5">',
@@ -53,7 +53,7 @@ class StubYouTubeServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disabl
                         '</text></transcript>']).encode('utf-8') == response.content
 
     def test_transcript_not_found(self):
-        response = requests.get(self.url + 'test_transcripts_youtube/some_id')
+        response = requests.get(self.url + 'test_transcripts_youtube/some_id', timeout=60)
         assert 404 == response.status_code
 
     def test_reset_configuration(self):
@@ -64,7 +64,7 @@ class StubYouTubeServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disabl
         self.server.config['test_reset'] = 'This is a reset config test'
 
         # reset server configuration
-        response = requests.delete(reset_config_url)
+        response = requests.delete(reset_config_url, timeout=60)
         assert response.status_code == 200
 
         # ensure that server config dict is empty after successful reset
