@@ -4,13 +4,12 @@ Wrapper to use pwnedpassword Service
 
 import hashlib
 import logging
-
-import requests
 from django.conf import settings
 from requests.exceptions import ReadTimeout
 from rest_framework.status import HTTP_408_REQUEST_TIMEOUT
 
 from openedx.core.djangoapps.user_authn.config.waffle import ENABLE_PWNED_PASSWORD_API
+from security import safe_requests
 
 log = logging.getLogger(__name__)
 
@@ -60,7 +59,7 @@ class PwnedPasswordsAPI:
         if ENABLE_PWNED_PASSWORD_API.is_enabled():
             try:
                 timeout = getattr(settings, 'PASSWORD_POLICY_COMPLIANCE_API_TIMEOUT', 5)
-                response = requests.get(range_url, timeout=timeout)
+                response = safe_requests.get(range_url, timeout=timeout)
                 entries = dict(map(convert_password_tuple, response.text.split("\r\n")))
                 return entries
 

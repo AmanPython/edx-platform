@@ -6,6 +6,7 @@ import sys
 from datetime import datetime
 
 import requests
+from security import safe_requests
 
 # Keys for the CSV and JSON interpretation
 PAGINATION_KEY = 'pagination'
@@ -59,7 +60,7 @@ def _get_course_data_summary(auth_token, months_restriction, xblock_type_set, ap
         list: a list of data objects summarizing each courses xBlock usage
     """
     # Get the Course list
-    response = requests.get(api_root + '/api/courses/v1/courses/')
+    response = safe_requests.get(api_root + '/api/courses/v1/courses/')
     json_result = response.json()
     num_courses = 0
     num_pages = 1
@@ -98,7 +99,7 @@ def _get_course_data_summary(auth_token, months_restriction, xblock_type_set, ap
             next_page = page_data.get('next', '')
             if not next_page:
                 break
-            json_result = requests.get(next_page).json()
+            json_result = safe_requests.get(next_page).json()
 
         # print to update the screen for status
         sys.stdout.write('.')
@@ -212,7 +213,7 @@ def _get_course_block_counts(auth_token, block_url):
     """
     headers = {'Authorization': f'Bearer {auth_token}'}
 
-    response = requests.get(block_url, headers=headers)
+    response = safe_requests.get(block_url, headers=headers)
     if response.status_code != 200:
         print(f"url {block_url} returned status code {response.status_code}")
         return {}

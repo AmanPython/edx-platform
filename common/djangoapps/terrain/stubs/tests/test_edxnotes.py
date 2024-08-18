@@ -12,6 +12,7 @@ import requests
 import six
 
 from ..edxnotes import StubEdxNotesService
+from security import safe_requests
 
 
 @ddt.ddt
@@ -87,30 +88,30 @@ class StubEdxNotesServiceTest(unittest.TestCase):
     def test_note_read(self):
         notes = self._get_notes()
         for note in notes:
-            response = requests.get(self._get_url("api/v1/annotations/" + note["id"]))
+            response = safe_requests.get(self._get_url("api/v1/annotations/" + note["id"]))
             assert response.ok
             self.assertDictEqual(note, response.json())
 
-        response = requests.get(self._get_url("api/v1/annotations/does_not_exist"))
+        response = safe_requests.get(self._get_url("api/v1/annotations/does_not_exist"))
         assert response.status_code == 404
 
     def test_note_update(self):
         notes = self._get_notes()
         for note in notes:
-            response = requests.get(self._get_url("api/v1/annotations/" + note["id"]))
+            response = safe_requests.get(self._get_url("api/v1/annotations/" + note["id"]))
             assert response.ok
             self.assertDictEqual(note, response.json())
 
-        response = requests.get(self._get_url("api/v1/annotations/does_not_exist"))
+        response = safe_requests.get(self._get_url("api/v1/annotations/does_not_exist"))
         assert response.status_code == 404
 
     def test_search(self):
         # Without user
-        response = requests.get(self._get_url("api/v1/search"))
+        response = safe_requests.get(self._get_url("api/v1/search"))
         assert response.status_code == 400
 
         # get response with default page and page size
-        response = requests.get(self._get_url("api/v1/search"), params={
+        response = safe_requests.get(self._get_url("api/v1/search"), params={
             "user": "dummy-user-id",
             "course_id": "dummy-course-id",
         })
@@ -128,7 +129,7 @@ class StubEdxNotesServiceTest(unittest.TestCase):
         )
 
         # search notes with text that don't exist
-        response = requests.get(self._get_url("api/v1/search"), params={
+        response = safe_requests.get(self._get_url("api/v1/search"), params={
             "user": "dummy-user-id",
             "course_id": "dummy-course-id",
             "text": "world war 2"
@@ -155,7 +156,7 @@ class StubEdxNotesServiceTest(unittest.TestCase):
         Test search with usage ids.
         """
         url = self._get_url('api/v1/search') + usage_ids
-        response = requests.get(url, params={
+        response = safe_requests.get(url, params={
             'user': 'dummy-user-id',
             'course_id': 'dummy-course-id'
         })
@@ -193,7 +194,7 @@ class StubEdxNotesServiceTest(unittest.TestCase):
         assert note['id'] == updated_note['id']
         self.assertCountEqual(note, updated_note)
 
-        response = requests.get(self._get_url("api/v1/annotations/does_not_exist"))
+        response = safe_requests.get(self._get_url("api/v1/annotations/does_not_exist"))
         assert response.status_code == 404
 
     # pylint: disable=too-many-arguments
@@ -248,11 +249,11 @@ class StubEdxNotesServiceTest(unittest.TestCase):
         """
 
         # Without user
-        response = requests.get(self._get_url("api/v1/annotations"))
+        response = safe_requests.get(self._get_url("api/v1/annotations"))
         assert response.status_code == 400
 
         # Without any pagination parameters
-        response = requests.get(self._get_url("api/v1/annotations"), params={"user": "dummy-user-id"})
+        response = safe_requests.get(self._get_url("api/v1/annotations"), params={"user": "dummy-user-id"})
 
         assert response.ok
         self._verify_pagination_info(
@@ -267,7 +268,7 @@ class StubEdxNotesServiceTest(unittest.TestCase):
         )
 
         # With pagination parameters
-        response = requests.get(self._get_url("api/v1/annotations"), params={
+        response = safe_requests.get(self._get_url("api/v1/annotations"), params={
             "user": "dummy-user-id",
             "page": 2,
             "page_size": 3
@@ -290,7 +291,7 @@ class StubEdxNotesServiceTest(unittest.TestCase):
         Test next and previous urls of paginated response of notes api
         when number of pages are 1
         """
-        response = requests.get(self._get_url("api/v1/annotations"), params={
+        response = safe_requests.get(self._get_url("api/v1/annotations"), params={
             "user": "dummy-user-id",
             "page_size": 10
         })
@@ -316,7 +317,7 @@ class StubEdxNotesServiceTest(unittest.TestCase):
         self.test_cleanup()
 
         # Get default page
-        response = requests.get(self._get_url("api/v1/annotations"), params={"user": "dummy-user-id"})
+        response = safe_requests.get(self._get_url("api/v1/annotations"), params={"user": "dummy-user-id"})
         assert response.ok
         self._verify_pagination_info(
             response=response.json(),
@@ -345,7 +346,7 @@ class StubEdxNotesServiceTest(unittest.TestCase):
 
     def test_headers(self):
         note = self._get_notes()[0]
-        response = requests.get(self._get_url("api/v1/annotations/" + note["id"]))
+        response = safe_requests.get(self._get_url("api/v1/annotations/" + note["id"]))
         assert response.ok
         assert response.headers.get('access-control-allow-origin') == '*'
 
