@@ -117,7 +117,7 @@ class EmailString(String):
 
 
 edx_xml_parser = etree.XMLParser(dtd_validation=False, load_dtd=False,
-                                 remove_comments=True, remove_blank_text=True)
+                                 remove_comments=True, remove_blank_text=True, resolve_entities=False)
 
 _cached_toc = {}
 

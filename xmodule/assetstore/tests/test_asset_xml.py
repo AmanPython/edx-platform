@@ -36,7 +36,7 @@ class TestAssetXml(unittest.TestCase):
         with open(xsd_path, 'rb') as f:
             schema_root = etree.XML(f.read())
         schema = etree.XMLSchema(schema_root)
-        self.xmlparser = etree.XMLParser(schema=schema)
+        self.xmlparser = etree.XMLParser(schema=schema, resolve_entities=False)
 
     def test_export_single_asset_to_from_xml(self):
         """

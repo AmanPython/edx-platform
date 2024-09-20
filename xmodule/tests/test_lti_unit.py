@@ -104,7 +104,7 @@ class LTIBlockTest(TestCase):
 
     def get_response_values(self, response):
         """Gets the values from the given response"""
-        parser = etree.XMLParser(ns_clean=True, recover=True, encoding='utf-8')
+        parser = etree.XMLParser(ns_clean=True, recover=True, encoding='utf-8', resolve_entities=False)
         root = etree.fromstring(response.body.strip(), parser=parser)
         lti_spec_namespace = "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0"
         namespaces = {'def': lti_spec_namespace}
