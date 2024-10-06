@@ -3,7 +3,6 @@ Various utilities used for creating test data
 """
 
 import datetime
-from random import choice, getrandbits, randint
 from time import time
 from uuid import uuid4
 
@@ -14,6 +13,7 @@ from openedx.core.djangoapps.content.course_overviews.tests.factories import (
     CourseOverviewFactory,
 )
 from xmodule.modulestore.tests.factories import CourseFactory
+import secrets
 
 
 def random_string():
@@ -23,7 +23,7 @@ def random_string():
 
 def random_bool():
     """Test util for generating a random boolean"""
-    return bool(getrandbits(1))
+    return bool(secrets.SystemRandom().getrandbits(1))
 
 
 def random_date(allow_null=False):
@@ -33,7 +33,7 @@ def random_date(allow_null=False):
     if allow_null and random_bool():
         return None
 
-    d = randint(1, int(time()))
+    d = secrets.SystemRandom().randint(1, int(time()))
     return datetime.datetime.fromtimestamp(d, tz=datetime.timezone.utc)
 
 
@@ -45,12 +45,12 @@ def random_url(allow_null=False):
         return None
 
     random_uuid = uuid4()
-    return choice([f"{random_uuid}.example.com", f"example.com/{random_uuid}"])
+    return secrets.choice([f"{random_uuid}.example.com", f"example.com/{random_uuid}"])
 
 
 def random_grade():
     """Return a random grade (0-100) with 2 decimal places of padding"""
-    return randint(0, 10000) / 100
+    return secrets.SystemRandom().randint(0, 10000) / 100
 
 
 def decimal_to_grade_format(decimal):

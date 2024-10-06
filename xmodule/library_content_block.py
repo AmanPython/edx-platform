@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import json
 import logging
-import random
 from copy import copy
 from gettext import ngettext, gettext
 
@@ -37,6 +36,7 @@ from xmodule.x_module import (
     XModuleToXBlockMixin,
     shim_xmodule_js,
 )
+import secrets
 
 # Make '_' a no-op so we can scrape strings. Using lambda instead of
 #  `django.utils.translation.ugettext_noop` because Django cannot be imported in this file
@@ -205,7 +205,7 @@ class LibraryContentBlock(
             'overlimit' (set) of dropped (block_type, block_id) tuples that were previously selected
             'added' (set) of newly added (block_type, block_id) tuples
         """
-        rand = random.Random()
+        rand = secrets.SystemRandom().Random()
 
         selected_keys = {tuple(k) for k in selected}  # set of (block_type, block_id) tuples assigned to this student
 
@@ -241,7 +241,7 @@ class LibraryContentBlock(
 
         if any((invalid_block_keys, overlimit_block_keys, added_block_keys)):
             selected = list(selected_keys)
-            random.shuffle(selected)
+            secrets.SystemRandom().shuffle(selected)
 
         return {
             'selected': selected,

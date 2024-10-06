@@ -5,7 +5,6 @@ import datetime
 import functools
 import io
 import json
-import random
 import shutil
 import tempfile
 from unittest.mock import Mock, NonCallableMock, patch
@@ -101,6 +100,7 @@ from openedx.core.lib.xblock_utils import grade_histogram
 from openedx.features.course_experience import RELATIVE_DATES_FLAG
 
 from .test_tools import msk_from_problem_urlname
+import secrets
 
 LOG_PATH = "lms.djangoapps.instructor.views.api"
 DATE_FIELD = Date()
@@ -3776,9 +3776,9 @@ class TestInstructorEmailContentList(SharedModuleStoreTestCase, LoginEnrollmentT
     def setup_fake_email_info(self, num_emails, with_failures=False):
         """ Initialize the specified number of fake emails """
         for email_id in range(num_emails):
-            num_sent = random.randint(1, 15401)
+            num_sent = secrets.SystemRandom().randint(1, 15401)
             if with_failures:
-                failed = random.randint(1, 15401)
+                failed = secrets.SystemRandom().randint(1, 15401)
             else:
                 failed = 0
 

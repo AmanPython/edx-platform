@@ -4,7 +4,6 @@ Utility functions used during user authentication.
 
 import hashlib
 import math
-import random
 import re
 from urllib.parse import urlparse  # pylint: disable=import-error
 from uuid import uuid4  # lint-amnesty, pylint: disable=unused-import
@@ -17,6 +16,7 @@ from rest_framework.status import HTTP_408_REQUEST_TIMEOUT
 from common.djangoapps.student.models import username_exists_or_retired
 from openedx.core.djangoapps.password_policy.hibp import PwnedPasswordsAPI
 from openedx.core.djangoapps.user_api.accounts import USERNAME_MAX_LENGTH
+import secrets
 
 
 def _remove_unsafe_bytes_from_url(url):
@@ -110,7 +110,7 @@ def generate_username_suggestions(name):
             ]
             for int_range in int_ranges:
                 for _ in range(10):
-                    random_int = random.randint(int_range['min'], int_range['max'])
+                    random_int = secrets.SystemRandom().randint(int_range['min'], int_range['max'])
                     suggestion = f'{short_username}_{random_int}'
                     if not username_exists_or_retired(suggestion):
                         username_suggestions.append(suggestion)

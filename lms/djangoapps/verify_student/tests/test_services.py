@@ -4,7 +4,6 @@ Tests for the service classes in verify_student.
 
 from datetime import datetime, timedelta, timezone
 import itertools
-from random import randint
 from unittest.mock import patch
 
 import ddt
@@ -21,6 +20,7 @@ from lms.djangoapps.verify_student.services import IDVerificationService
 from openedx.core.djangoapps.site_configuration import helpers as configuration_helpers
 from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase  # lint-amnesty, pylint: disable=wrong-import-order
 from xmodule.modulestore.tests.factories import CourseFactory  # lint-amnesty, pylint: disable=wrong-import-order
+import secrets
 
 FAKE_SETTINGS = {
     "DAYS_GOOD_FOR": 365,
@@ -200,7 +200,7 @@ class TestIDVerificationService(ModuleStoreTestCase):
     def test_get_verification_details_not_found(self, verification_model):
         user = UserFactory.create()
         model_object = verification_model.objects.create(user=user)
-        not_found_id = model_object.id + randint(100, 200)
+        not_found_id = model_object.id + secrets.SystemRandom().randint(100, 200)
         attempt = IDVerificationService.get_verification_details_by_id(not_found_id)
         assert attempt is None
 

@@ -4,7 +4,6 @@ Tests for Discussion API internal interface
 
 
 import itertools
-import random
 from datetime import datetime, timedelta
 from unittest import mock
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
@@ -82,6 +81,7 @@ from openedx.core.djangoapps.django_comment_common.models import (
     Role
 )
 from openedx.core.lib.exceptions import CourseNotFoundError, PageNotFoundError
+import secrets
 
 User = get_user_model()
 
@@ -4155,7 +4155,7 @@ class CourseTopicsV2Test(ModuleStoreTestCase):
         # Set up topic stats for all topics, but have one deleted topic
         # and one active topic return zero stats for testing.
         self.topic_stats = {
-            **{topic_id: dict(discussion=random.randint(0, 10), question=random.randint(0, 10))
+            **{topic_id: dict(discussion=secrets.SystemRandom().randint(0, 10), question=secrets.SystemRandom().randint(0, 10))
                for topic_id in self.all_topic_ids},
             deleted_topic_ids[0]: dict(discussion=0, question=0),
             self.topic_ids[0]: dict(discussion=0, question=0),
@@ -4178,7 +4178,7 @@ class CourseTopicsV2Test(ModuleStoreTestCase):
         """
         Tests that filtering by topic id works
         """
-        filter_ids = set(random.sample(self.topic_ids, 4))
+        filter_ids = set(secrets.SystemRandom().sample(self.topic_ids, 4))
         topics_list = get_course_topics_v2(course_key=self.course_key, user=self.user, topic_ids=filter_ids)
         assert len(topics_list) == 4
         # All the filtered ids should be returned

@@ -6,7 +6,6 @@ Synchronizes a mailchimp list with the students of a course.
 import itertools
 import logging
 import math
-import random
 from collections import namedtuple
 from itertools import chain
 
@@ -15,6 +14,7 @@ from mailsnake import MailSnake
 from opaque_keys.edx.keys import CourseKey
 
 from common.djangoapps.student.models import UserProfile, unique_id_for_user
+import secrets
 
 BATCH_SIZE = 15000
 # If you try to subscribe with too many users at once
@@ -325,7 +325,7 @@ def make_segments(mailchimp, list_id, count, emails):
 
         # shuffle and split emails
         emails = list(emails)
-        random.shuffle(emails)  # Why do we do this?
+        secrets.SystemRandom().shuffle(emails)  # Why do we do this?
 
         chunk_size = int(math.ceil(float(len(emails)) / count))
         chunks = list(chunk(emails, chunk_size))

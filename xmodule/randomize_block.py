@@ -1,7 +1,6 @@
 # lint-amnesty, pylint: disable=missing-module-docstring
 
 import logging
-import random
 
 from django.utils.functional import cached_property
 from lxml import etree
@@ -16,6 +15,7 @@ from xmodule.x_module import (
     XModuleMixin,
     XModuleToXBlockMixin,
 )
+import secrets
 
 log = logging.getLogger('edx.' + __name__)
 
@@ -72,7 +72,7 @@ class RandomizeBlock(
                 if self.runtime.seed is not None:
                     self.choice = self.runtime.seed % num_choices
                 else:
-                    self.choice = random.randrange(0, num_choices)
+                    self.choice = secrets.SystemRandom().randrange(0, num_choices)
 
         if self.choice is None:
             return None

@@ -3,7 +3,6 @@ Utility methods for the account settings.
 """
 
 import logging
-import random
 import re
 import string
 from urllib.parse import urlparse  # pylint: disable=import-error
@@ -23,6 +22,7 @@ from openedx.core.djangolib.oauth2_retirement_utils import retire_dot_oauth2_mod
 from xmodule.modulestore.django import modulestore  # lint-amnesty, pylint: disable=wrong-import-order
 
 from ..models import UserRetirementStatus
+import secrets
 
 ENABLE_SECONDARY_EMAIL_FEATURE_SWITCH = 'enable_secondary_email_feature'
 LOGGER = logging.getLogger(__name__)
@@ -234,13 +234,13 @@ def username_suffix_generator(suffix_length=4):
     # pick from letters, or numbers
     choice_collections = [string.ascii_lowercase, string.digits]
     # randomize which collection to pick from first
-    random.shuffle(choice_collections)
+    secrets.SystemRandom().shuffle(choice_collections)
     output = ''
     for i in range(suffix_length):
         if (i % 2) == 0:
-            output += random.choice(choice_collections[0])
+            output += secrets.choice(choice_collections[0])
         else:
-            output += random.choice(choice_collections[1])
+            output += secrets.choice(choice_collections[1])
     return output
 
 

@@ -7,7 +7,6 @@ Tests of the Capa XModule
 import datetime
 import json
 import os
-import random
 import textwrap
 import unittest
 from unittest.mock import DEFAULT, Mock, patch
@@ -39,6 +38,7 @@ from xmodule.tests import DATA_DIR
 
 from ..capa_block import RANDOMIZATION, SHOWANSWER
 from . import get_test_system
+import secrets
 
 
 class CapaFactory:
@@ -1354,7 +1354,7 @@ class ProblemBlockTest(unittest.TestCase):  # lint-amnesty, pylint: disable=miss
 
     def test_should_enable_submit_button(self):
 
-        attempts = random.randint(1, 10)
+        attempts = secrets.SystemRandom().randint(1, 10)
 
         # If we're after the deadline, disable the submit button
         block = CapaFactory.create(due=self.yesterday_str)
@@ -1396,7 +1396,7 @@ class ProblemBlockTest(unittest.TestCase):  # lint-amnesty, pylint: disable=miss
 
     def test_should_show_reset_button(self):
 
-        attempts = random.randint(1, 10)
+        attempts = secrets.SystemRandom().randint(1, 10)
 
         # If we're after the deadline, do NOT show the reset button
         block = CapaFactory.create(due=self.yesterday_str, done=True)
@@ -1440,7 +1440,7 @@ class ProblemBlockTest(unittest.TestCase):  # lint-amnesty, pylint: disable=miss
 
     def test_should_show_save_button(self):
 
-        attempts = random.randint(1, 10)
+        attempts = secrets.SystemRandom().randint(1, 10)
 
         # If we're after the deadline, do NOT show the save button
         block = CapaFactory.create(due=self.yesterday_str, done=True)
@@ -1497,7 +1497,7 @@ class ProblemBlockTest(unittest.TestCase):  # lint-amnesty, pylint: disable=miss
         assert not block.should_show_save_button()
 
         # If the user is out of attempts, do NOT show the save button
-        attempts = random.randint(1, 10)
+        attempts = secrets.SystemRandom().randint(1, 10)
         block = CapaFactory.create(attempts=attempts,
                                    max_attempts=attempts,
                                    force_save_button="true",
@@ -1529,9 +1529,9 @@ class ProblemBlockTest(unittest.TestCase):  # lint-amnesty, pylint: disable=miss
 
         # We've tested the show/hide button logic in other tests,
         # so here we hard-wire the values
-        enable_submit_button = bool(random.randint(0, 1) % 2)
-        show_reset_button = bool(random.randint(0, 1) % 2)
-        show_save_button = bool(random.randint(0, 1) % 2)
+        enable_submit_button = bool(secrets.SystemRandom().randint(0, 1) % 2)
+        show_reset_button = bool(secrets.SystemRandom().randint(0, 1) % 2)
+        show_save_button = bool(secrets.SystemRandom().randint(0, 1) % 2)
 
         block.should_enable_submit_button = Mock(return_value=enable_submit_button)
         block.should_show_reset_button = Mock(return_value=show_reset_button)

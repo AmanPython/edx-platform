@@ -4,7 +4,6 @@ Tests for Discussion API views
 
 
 import json
-import random
 from datetime import datetime
 from unittest import mock
 from urllib.parse import parse_qs, urlencode, urlparse
@@ -64,6 +63,7 @@ from openedx.core.djangoapps.oauth_dispatch.jwt import create_jwt_for_user
 from openedx.core.djangoapps.oauth_dispatch.tests.factories import AccessTokenFactory, ApplicationFactory
 from openedx.core.djangoapps.user_api.accounts.image_helpers import get_profile_image_storage
 from openedx.core.djangoapps.user_api.models import RetirementState, UserRetirementStatus
+import secrets
 
 
 class DiscussionAPIViewTestMixin(ForumsEnableMixin, CommentsServiceMockMixin, UrlResetMixin):
@@ -973,7 +973,7 @@ class CourseTopicsViewV3Test(DiscussionAPIViewTestMixin, CommentsServiceMockMixi
         topic_ids = list(topic_id_query.order_by('ordering'))
         DiscussionTopicLink.objects.bulk_create(topic_links)
         self.topic_stats = {
-            **{topic_id: dict(discussion=random.randint(0, 10), question=random.randint(0, 10))
+            **{topic_id: dict(discussion=secrets.SystemRandom().randint(0, 10), question=secrets.SystemRandom().randint(0, 10))
                for topic_id in set(topic_ids)},
             topic_ids[0]: dict(discussion=0, question=0),
         }
@@ -3279,11 +3279,11 @@ class CourseActivityStatsTest(ForumsEnableMixin, UrlResetMixin, CommentsServiceM
         moderator_role.users.add(self.moderator)
         self.stats = [
             {
-                "active_flags": random.randint(0, 3),
-                "inactive_flags": random.randint(0, 2),
-                "replies": random.randint(0, 30),
-                "responses": random.randint(0, 100),
-                "threads": random.randint(0, 10),
+                "active_flags": secrets.SystemRandom().randint(0, 3),
+                "inactive_flags": secrets.SystemRandom().randint(0, 2),
+                "replies": secrets.SystemRandom().randint(0, 30),
+                "responses": secrets.SystemRandom().randint(0, 100),
+                "threads": secrets.SystemRandom().randint(0, 10),
                 "username": f"user-{idx}"
             }
             for idx in range(10)

@@ -2,7 +2,6 @@
 
 import datetime
 import json
-import random
 import sys
 from textwrap import dedent
 
@@ -11,6 +10,7 @@ from django.core.management.base import BaseCommand
 from pytz import UTC
 
 from common.djangoapps.student.models import UserTestGroup
+import secrets
 
 # Examples:
 # python manage.py assigngroups summary_test:0.3,skip_summary_test:0.7 log.txt "Do previews of future materials help?"
@@ -86,7 +86,7 @@ class Command(BaseCommand):  # lint-amnesty, pylint: disable=missing-class-docst
             if count % 1000 == 0:
                 print(count)
             count = count + 1
-            v = random.uniform(0, 1)
+            v = secrets.SystemRandom().uniform(0, 1)
             group = group_from_value(groups, v)
             group_objects[group].users.add(user)
             f.write("Assigned user {name} ({id}) to {group}\n".format(

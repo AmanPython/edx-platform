@@ -11,7 +11,6 @@ import datetime
 import json
 import logging
 import string
-import random
 import re
 
 import dateutil
@@ -136,6 +135,7 @@ from .tools import (
     strip_if_string,
 )
 from .. import permissions
+import secrets
 
 log = logging.getLogger(__name__)
 
@@ -584,7 +584,7 @@ def generate_random_string(length):
         char for char in string.ascii_uppercase + string.digits + string.ascii_lowercase
         if char not in 'aAeEiIoOuU1l'
     ]
-    return ''.join(random.choice(chars) for i in range(length))
+    return ''.join(secrets.choice(chars) for i in range(length))
 
 
 def generate_unique_password(generated_passwords, password_length=12):
