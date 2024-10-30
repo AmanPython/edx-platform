@@ -14,6 +14,7 @@ from xmodule.modulestore.tests.factories import CourseFactory, BlockFactory
 import lms.djangoapps.lti_provider.outcomes as outcomes
 from common.djangoapps.student.tests.factories import UserFactory
 from lms.djangoapps.lti_provider.models import GradedAssignment, LtiConsumer, OutcomeService
+import lxml.etree
 
 
 class StoreOutcomeParametersTest(TestCase):
@@ -214,7 +215,7 @@ class XmlHandlingTest(TestCase):
     def test_replace_result_message_uuid(self, _uuid_mock):
         # Pylint doesn't recognize members in the LXML module
         xml = outcomes.generate_replace_result_xml(self.result_id, self.score)
-        tree = etree.fromstring(xml)
+        tree = etree.fromstring(xml, parser=lxml.etree.XMLParser(resolve_entities=False))
         message_id = tree.xpath(
             '//ns:imsx_messageIdentifier',
             namespaces={'ns': 'http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0'}
@@ -224,7 +225,7 @@ class XmlHandlingTest(TestCase):
 
     def test_replace_result_sourced_id(self):
         xml = outcomes.generate_replace_result_xml(self.result_id, self.score)
-        tree = etree.fromstring(xml)
+        tree = etree.fromstring(xml, parser=lxml.etree.XMLParser(resolve_entities=False))
         sourced_id = tree.xpath(
             '/ns:imsx_POXEnvelopeRequest/ns:imsx_POXBody/ns:replaceResultRequest/'
             'ns:resultRecord/ns:sourcedGUID/ns:sourcedId',
@@ -235,7 +236,7 @@ class XmlHandlingTest(TestCase):
 
     def test_replace_result_score(self):
         xml = outcomes.generate_replace_result_xml(self.result_id, self.score)
-        tree = etree.fromstring(xml)
+        tree = etree.fromstring(xml, parser=lxml.etree.XMLParser(resolve_entities=False))
         xml_score = tree.xpath(
             '/ns:imsx_POXEnvelopeRequest/ns:imsx_POXBody/ns:replaceResultRequest/'
             'ns:resultRecord/ns:result/ns:resultScore/ns:textString',

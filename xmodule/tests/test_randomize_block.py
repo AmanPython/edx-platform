@@ -12,6 +12,7 @@ from xmodule.randomize_block import RandomizeBlock
 from xmodule.tests import prepare_block_runtime
 
 from .test_course_block import DummySystem as TestImportSystem
+import lxml.etree
 
 
 class RandomizeBlockTest(MixedSplitTestCase):
@@ -82,7 +83,7 @@ class RandomizeBlockTest(MixedSplitTestCase):
         runtime.resources_fs = export_fs
 
         # Now import it.
-        olx_element = etree.fromstring(exported_olx)
+        olx_element = etree.fromstring(exported_olx, parser=lxml.etree.XMLParser(resolve_entities=False))
         id_generator = Mock()
         imported_randomize_block = RandomizeBlock.parse_xml(olx_element, runtime, None, id_generator)
 

@@ -17,6 +17,7 @@ from common.djangoapps.third_party_auth.utils import (
     create_or_update_bulk_saml_provider_data,
     parse_metadata_xml,
 )
+import lxml.etree
 
 log = logging.getLogger(__name__)
 
@@ -80,7 +81,7 @@ def fetch_saml_metadata():
 
             try:
                 parser = etree.XMLParser(remove_comments=True)
-                xml = etree.fromstring(response.content, parser)
+                xml = etree.fromstring(response.content, parser, parser=lxml.etree.XMLParser(resolve_entities=False))
             except etree.XMLSyntaxError:  # lint-amnesty, pylint: disable=try-except-raise
                 raise
             # TODO: Can use OneLogin_Saml2_Utils to validate signed XML if anyone is using that

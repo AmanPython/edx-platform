@@ -27,6 +27,7 @@ from xmodule.modulestore import ModuleStoreEnum  # lint-amnesty, pylint: disable
 from xmodule.modulestore.django import modulestore  # lint-amnesty, pylint: disable=wrong-import-order
 from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase  # lint-amnesty, pylint: disable=wrong-import-order
 from xmodule.modulestore.tests.factories import CourseFactory, BlockFactory  # lint-amnesty, pylint: disable=wrong-import-order
+import lxml.etree
 
 
 @ddt.ddt
@@ -145,7 +146,7 @@ class StructuredTagsAsideTestCase(ModuleStoreTestCase):
         problem_html = get_preview_fragment(request, self.problem, context).content
 
         parser = etree.HTMLParser()
-        tree = etree.parse(StringIO(problem_html), parser)
+        tree = etree.parse(StringIO(problem_html), parser, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         main_div_nodes = tree.xpath('/html/body/div/section/div')
         self.assertEqual(len(main_div_nodes), 2)

@@ -55,6 +55,7 @@ from xmodule.x_module import XModuleMixin
 
 from .inheritance import own_metadata
 from .store_utilities import rewrite_nonportable_content_links
+import lxml.etree
 
 log = logging.getLogger(__name__)
 
@@ -379,7 +380,7 @@ class ImportManager:
 
         all_assets = []
         try:
-            xml_data = etree.parse(asset_xml_file).getroot()
+            xml_data = etree.parse(asset_xml_file, parser=lxml.etree.XMLParser(resolve_entities=False)).getroot()
             assert xml_data.tag == AssetMetadata.ALL_ASSETS_XML_TAG
             for asset in xml_data.iterchildren():
                 if asset.tag == AssetMetadata.ASSET_XML_TAG:

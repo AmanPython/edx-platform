@@ -52,6 +52,7 @@ from .util import (
     get_inner_html_from_xpath,
     is_list_of_files
 )
+import lxml.etree
 
 log = logging.getLogger(__name__)
 
@@ -2830,7 +2831,7 @@ class CodeResponse(LoncapaResponse):
         msg = score_result['msg']
 
         try:
-            etree.fromstring(msg)
+            etree.fromstring(msg, parser=lxml.etree.XMLParser(resolve_entities=False))
         except etree.XMLSyntaxError as _err:
             # If `html` contains attrs with no values, like `controls` in <audio controls src='smth'/>,
             # XML parser will raise exception, so wee fallback to html5parser,
@@ -2940,7 +2941,7 @@ class ExternalResponse(LoncapaResponse):
 
         try:
             # response is XML; parse it
-            rxml = etree.fromstring(req.text)
+            rxml = etree.fromstring(req.text, parser=lxml.etree.XMLParser(resolve_entities=False))
         except Exception as err:
             msg = 'Error {0} - cannot parse response from external server req.text={1}'.format(err, req.text)
             log.error(msg)

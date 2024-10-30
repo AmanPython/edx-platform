@@ -39,6 +39,7 @@ from xmodule.video_block import EXPORT_IMPORT_STATIC_DIR, VideoBlock, create_you
 from xmodule.video_block.transcripts_utils import save_to_store
 
 from .test_import import DummySystem
+import lxml.etree
 
 SRT_FILEDATA = '''
 0
@@ -297,7 +298,7 @@ class VideoBlockImportTestCase(TestCase):
               <transcript language="de" src="german_translation.srt" />
             </video>
         '''
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         output = VideoBlock.parse_xml(xml_object, module_system, None, Mock())
         self.assert_attributes_equal(output, {
             'youtube_id_0_75': 'izygArpw-Qo',
@@ -343,7 +344,7 @@ class VideoBlockImportTestCase(TestCase):
               <transcript language="de" src="german_translation.srt" />
             </video>
         '''
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         id_generator = Mock()
         id_generator.target_course_id = course_id
 
@@ -378,7 +379,7 @@ class VideoBlockImportTestCase(TestCase):
               <source src="http://www.example.com/source.mp4"/>
             </video>
         '''
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         output = VideoBlock.parse_xml(xml_object, module_system, None, Mock())
         self.assert_attributes_equal(output, {
             'youtube_id_0_75': '',
@@ -410,7 +411,7 @@ class VideoBlockImportTestCase(TestCase):
               <track src="http://www.example.com/track"/>
             </video>
         '''
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         output = VideoBlock.parse_xml(xml_object, module_system, None, Mock())
         self.assert_attributes_equal(output, {
             'youtube_id_0_75': '',
@@ -434,7 +435,7 @@ class VideoBlockImportTestCase(TestCase):
         """
         module_system = DummySystem(load_error_blocks=True)
         xml_data = '<video></video>'
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         output = VideoBlock.parse_xml(xml_object, module_system, None, Mock())
         self.assert_attributes_equal(output, {
             'youtube_id_0_75': '',
@@ -474,7 +475,7 @@ class VideoBlockImportTestCase(TestCase):
                 youtube_id_1_0="&quot;OEoXaMPEzf10&quot;"
                 />
         '''
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         output = VideoBlock.parse_xml(xml_object, module_system, None, Mock())
         self.assert_attributes_equal(output, {
             'youtube_id_0_75': 'OEoXaMPEzf65',
@@ -499,7 +500,7 @@ class VideoBlockImportTestCase(TestCase):
                    youtube="1.0:&quot;p2Q6BrNhdh8&quot;,1.25:&quot;1EeWXzPdhSA&quot;">
             </video>
         '''
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         output = VideoBlock.parse_xml(xml_object, module_system, None, Mock())
         self.assert_attributes_equal(output, {
             'youtube_id_0_75': '',
@@ -533,7 +534,7 @@ class VideoBlockImportTestCase(TestCase):
               <track src="http://www.example.com/track"/>
             </video>
         """
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         output = VideoBlock.parse_xml(xml_object, module_system, None, Mock())
         self.assert_attributes_equal(output, {
             'youtube_id_0_75': 'izygArpw-Qo',
@@ -564,7 +565,7 @@ class VideoBlockImportTestCase(TestCase):
               <track src="http://www.example.com/track"/>
             </video>
         """
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         video = VideoBlock.parse_xml(xml_object, module_system, None, Mock())
         self.assert_attributes_equal(video, {
             'youtube_id_0_75': 'izygArpw-Qo',
@@ -595,7 +596,7 @@ class VideoBlockImportTestCase(TestCase):
               <track src="http://www.example.com/track"/>
             </video>
         """
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         video = VideoBlock.parse_xml(xml_object, module_system, None, Mock())
         self.assert_attributes_equal(video, {
             'youtube_id_0_75': 'izygArpw-Qo',
@@ -642,7 +643,7 @@ class VideoBlockImportTestCase(TestCase):
         """.format(
             edx_video_id=edx_video_id
         )
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         id_generator = Mock()
         id_generator.target_course_id = 'test_course_id'
         video = VideoBlock.parse_xml(xml_object, module_system, None, id_generator)
@@ -669,7 +670,7 @@ class VideoBlockImportTestCase(TestCase):
                 <video_asset client_video_id="test_client_video_id" duration="-1"/>
             </video>
         """
-        xml_object = etree.fromstring(xml_data)
+        xml_object = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         with pytest.raises(mock_val_api.ValCannotCreateError):
             VideoBlock.parse_xml(xml_object, module_system, None, Mock())
 

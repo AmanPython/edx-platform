@@ -6,6 +6,7 @@ from lxml import etree
 from xblock.fields import Scope, String
 
 from .exceptions import SerializationError
+import lxml.etree
 
 log = logging.getLogger(__name__)
 
@@ -45,7 +46,7 @@ class RawMixin:
 
         # Normal case: Just echo back the original OLX we saved.
         try:
-            return etree.fromstring(self.data)
+            return etree.fromstring(self.data, parser=lxml.etree.XMLParser(resolve_entities=False))
         except etree.XMLSyntaxError as err:
             # Can't recover here, so just add some info and
             # re-raise
@@ -99,5 +100,5 @@ class EmptyDataRawMixin:
 
     def definition_to_xml(self, resource_fs):  # lint-amnesty, pylint: disable=unused-argument
         if self.data:
-            return etree.fromstring(self.data)
+            return etree.fromstring(self.data, parser=lxml.etree.XMLParser(resolve_entities=False))
         return etree.Element(self.category)

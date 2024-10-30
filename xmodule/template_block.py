@@ -19,6 +19,7 @@ from xmodule.x_module import (
 from xmodule.xml_block import XmlMixin
 
 from openedx.core.djangolib.markup import Text
+import lxml.etree
 
 
 class CustomTagTemplateBlock(  # pylint: disable=abstract-method
@@ -76,7 +77,7 @@ class CustomTagBlock(CustomTagTemplateBlock):  # pylint: disable=abstract-method
 
     def render_template(self, system, xml_data):
         '''Render the template, given the definition xml_data'''
-        xmltree = etree.fromstring(xml_data)
+        xmltree = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
         if 'impl' in xmltree.attrib:
             template_name = xmltree.attrib['impl']
         else:

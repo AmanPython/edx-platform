@@ -12,6 +12,7 @@ from lxml import etree
 from opaque_keys.edx.keys import CourseKey
 
 from xmodule.assetstore import AssetMetadata
+import lxml.etree
 
 try:
     import click
@@ -200,7 +201,7 @@ def validate_xml(xsd_filename, xml_filename):
     xmlparser = etree.XMLParser(schema=schema)
 
     with open(xml_filename) as f:
-        etree.fromstring(f.read(), xmlparser)
+        etree.fromstring(f.read(), xmlparser, parser=lxml.etree.XMLParser(resolve_entities=False))
 
 if click is not None:
     @click.command()

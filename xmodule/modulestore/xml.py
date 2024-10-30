@@ -38,6 +38,7 @@ from xmodule.x_module import (  # lint-amnesty, pylint: disable=unused-import
 
 from .exceptions import ItemNotFoundError
 from .inheritance import compute_inherited_metadata, inheriting_field_data
+import lxml.etree
 
 edx_xml_parser = etree.XMLParser(dtd_validation=False, load_dtd=False, remove_blank_text=True)
 
@@ -158,7 +159,7 @@ class ImportSystem(XMLParsingSystem, MakoDescriptorSystem):  # lint-amnesty, pyl
                 xml_data.set('url_name', url_name)
 
             try:
-                xml_data = etree.fromstring(xml)
+                xml_data = etree.fromstring(xml, parser=lxml.etree.XMLParser(resolve_entities=False))
                 make_name_unique(xml_data)
                 block = self.xblock_from_node(
                     xml_data,
