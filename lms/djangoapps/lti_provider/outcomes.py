@@ -177,8 +177,8 @@ def sign_and_send_replace_result(assignment, xml):
         assignment.outcome_service.lis_outcome_service_url,
         data=xml,
         auth=oauth,
-        headers=headers
-    )
+        headers=headers, 
+    timeout=60)
 
     return response
 
