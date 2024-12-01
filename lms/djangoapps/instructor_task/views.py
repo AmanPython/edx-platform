@@ -84,7 +84,7 @@ def instructor_task_status(request):
             if task_output is not None:
                 output[task_id] = task_output
 
-    return HttpResponse(json.dumps(output, indent=4))  # lint-amnesty, pylint: disable=http-response-with-json-dumps
+    return HttpResponse(json.dumps(output, indent=4), content_type="application/json")  # lint-amnesty, pylint: disable=http-response-with-json-dumps
 
 
 def get_task_completion_info(instructor_task):  # lint-amnesty, pylint: disable=too-many-statements
