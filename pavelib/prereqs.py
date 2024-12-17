@@ -14,6 +14,7 @@ from paver.easy import sh, task  # lint-amnesty, pylint: disable=unused-import
 
 from .utils.envs import Env
 from .utils.timer import timed
+from security import safe_command
 
 PREREQS_STATE_DIR = os.getenv('PREREQ_CACHE_DIR', Env.REPO_ROOT / '.prereqs_cache')
 NO_PREREQ_MESSAGE = "NO_PREREQ_INSTALL is set, not installing prereqs"
@@ -159,7 +160,7 @@ def node_prereqs_installation():
     # The implementation of Paver's `sh` function returns before the forked
     # actually returns. Using a Popen object so that we can ensure that
     # the forked process has returned
-    proc = subprocess.Popen(npm_command, stderr=npm_log_file)  # lint-amnesty, pylint: disable=consider-using-with
+    proc = safe_command.run(subprocess.Popen, npm_command, stderr=npm_log_file)  # lint-amnesty, pylint: disable=consider-using-with
     retcode = proc.wait()
     if retcode == 1:
         raise Exception(f"npm install failed: See {npm_log_file_path}")
