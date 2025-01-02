@@ -33,6 +33,7 @@ from blockstore.apps.api.exceptions import (
 import blockstore.apps.api.methods as blockstore_api_methods
 
 from .config import use_blockstore_app
+from security import safe_requests
 
 
 def toggle_blockstore_api(func):
@@ -427,7 +428,7 @@ def get_bundle_file_data(bundle_uuid, path, use_draft=None):
     Do not use this for large files!
     """
     metadata = get_bundle_file_metadata(bundle_uuid, path, use_draft)
-    with requests.get(metadata.url, stream=True) as r:
+    with safe_requests.get(metadata.url, stream=True) as r:
         return r.content
 
 

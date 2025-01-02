@@ -59,7 +59,6 @@ import hashlib
 import logging
 
 import attr
-import requests
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
@@ -130,6 +129,7 @@ from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError
 
 from . import tasks
+from security import safe_requests
 
 
 log = logging.getLogger(__name__)
@@ -1424,7 +1424,7 @@ class EdxModulestoreImportClient(BaseEdxImportClient):
         """
         if asset_file.data:
             return asset_file.data
-        resp = requests.get(f"http://{settings.CMS_BASE}" + asset_file.url)
+        resp = safe_requests.get(f"http://{settings.CMS_BASE}" + asset_file.url)
         resp.raise_for_status()
         return resp.content
 
@@ -1486,7 +1486,7 @@ class EdxApiImportClient(BaseEdxImportClient):
             path = asset_file['url'][len(self.studio_url):]
             resp = self._call('get', path)
         else:
-            resp = requests.get(asset_file['url'])
+            resp = safe_requests.get(asset_file['url'])
             resp.raise_for_status()
         return resp.content
 
