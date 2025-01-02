@@ -4,8 +4,6 @@ Code to manage fetching and storing the metadata of IdPs.
 
 
 import logging
-
-import requests
 from celery import shared_task
 from edx_django_utils.monitoring import set_code_owner_attribute
 from lxml import etree
@@ -17,6 +15,7 @@ from common.djangoapps.third_party_auth.utils import (
     create_or_update_bulk_saml_provider_data,
     parse_metadata_xml,
 )
+from security import safe_requests
 
 log = logging.getLogger(__name__)
 
@@ -75,7 +74,7 @@ def fetch_saml_metadata():
             log.info("Fetching %s", url)
             if not url.lower().startswith('https'):
                 log.warning("This SAML metadata URL is not secure! It should use HTTPS. (%s)", url)
-            response = requests.get(url, verify=True)  # May raise HTTPError or SSLError or ConnectionError
+            response = safe_requests.get(url, verify=True)  # May raise HTTPError or SSLError or ConnectionError
             response.raise_for_status()  # May raise an HTTPError
 
             try:

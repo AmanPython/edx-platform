@@ -11,7 +11,6 @@ from datetime import datetime
 from urllib.parse import quote_plus, urlencode, urljoin, urlparse, urlunparse
 
 import bleach
-import requests
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import AnonymousUser, User  # lint-amnesty, pylint: disable=imported-auth-user
@@ -139,6 +138,7 @@ from openedx.features.enterprise_support.api import data_sharing_consent_require
 from ..block_render import get_block, get_block_by_usage_id, get_block_for_descriptor
 from ..tabs import _get_dynamic_tabs
 from ..toggles import COURSEWARE_OPTIMIZED_RENDER_XBLOCK
+from security import safe_requests
 
 log = logging.getLogger("edx.courseware")
 
@@ -349,7 +349,7 @@ def load_metadata_from_youtube(video_id, request):
 
         payload = {'id': video_id, 'part': 'contentDetails', 'key': yt_api_key}
         try:
-            res = requests.get(yt_metadata_url, params=payload, timeout=yt_timeout, headers=headers)
+            res = safe_requests.get(yt_metadata_url, params=payload, timeout=yt_timeout, headers=headers)
             status_code = res.status_code
             if res.status_code == 200:
                 try:

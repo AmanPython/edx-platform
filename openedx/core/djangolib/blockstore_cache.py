@@ -15,9 +15,9 @@ from uuid import UUID
 from django.conf import settings
 from django.core.cache import caches, InvalidCacheBackendError
 from pytz import UTC
-import requests
 
 from openedx.core.lib import blockstore_api
+from security import safe_requests
 
 try:
     # Use a dedicated cache for blockstore, if available:
@@ -221,7 +221,7 @@ def get_bundle_file_data_with_cache(bundle_uuid, path, bundle_version=None, draf
     cached list of files in each bundle if available.
     """
     file_info = get_bundle_file_metadata_with_cache(bundle_uuid, path, bundle_version, draft_name)
-    response = requests.get(file_info.url)
+    response = safe_requests.get(file_info.url)
     if response.status_code != 200:
         try:
             error_response = response.content.decode('utf-8')[:500]
