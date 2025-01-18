@@ -4,7 +4,6 @@ Tests for serializers for the Learner Home
 
 from datetime import date, datetime, timedelta, timezone
 from itertools import product
-from random import randint
 from unittest import mock
 from uuid import uuid4
 
@@ -62,6 +61,7 @@ from lms.djangoapps.learner_home.test_utils import (
 from xmodule.data import CertificatesDisplayBehaviors
 from xmodule.modulestore.tests.django_utils import SharedModuleStoreTestCase
 from xmodule.modulestore.tests.factories import CourseFactory
+import secrets
 
 
 class LearnerDashboardBaseTest(SharedModuleStoreTestCase):
@@ -195,7 +195,7 @@ class TestCourseRunSerializer(LearnerDashboardBaseTest):
             "course_mode_info": {
                 course_id: {
                     "verified_sku": str(uuid4()),
-                    "days_for_upsell": randint(0, 14),
+                    "days_for_upsell": secrets.SystemRandom().randint(0, 14),
                 }
             },
         }
@@ -871,7 +871,7 @@ class TestLearnerEnrollmentsSerializer(LearnerDashboardBaseTest):
             "course_mode_info": {
                 enrollment.course.id: {
                     "verified_sku": str(uuid4()),
-                    "days_for_upsell": randint(0, 14),
+                    "days_for_upsell": secrets.SystemRandom().randint(0, 14),
                 }
             },
             "fulfilled_entitlements": {},
@@ -1242,7 +1242,7 @@ class TestLearnerDashboardSerializer(LearnerDashboardBaseTest):
         course_mode_info = {
             enrollment.course.id: {
                 "verified_sku": str(uuid4()),
-                "days_for_upsell": randint(0, 14),
+                "days_for_upsell": secrets.SystemRandom().randint(0, 14),
             }
             for enrollment in enrollments
             if enrollment.mode == "audit"

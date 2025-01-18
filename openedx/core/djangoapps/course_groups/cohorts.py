@@ -5,7 +5,6 @@ forums, and to the cohort admin views.
 
 
 import logging
-import random
 
 from django.contrib.auth.models import User  # lint-amnesty, pylint: disable=imported-auth-user
 from django.core.exceptions import ValidationError
@@ -32,6 +31,7 @@ from .models import (
     UnregisteredLearnerCohortAssignments
 )
 from .signals.signals import COHORT_MEMBERSHIP_UPDATED
+import secrets
 
 log = logging.getLogger(__name__)
 
@@ -112,7 +112,7 @@ def local_random():
     global _local_random
 
     if _local_random is None:
-        _local_random = random.Random()
+        _local_random = secrets.SystemRandom().Random()
 
     return _local_random
 

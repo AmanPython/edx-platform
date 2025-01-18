@@ -2,7 +2,6 @@
 import functools
 import json
 import logging
-import random
 import time
 
 import six
@@ -65,6 +64,7 @@ from openedx.core.djangoapps.django_comment_common.signals import (
 )
 from openedx.core.djangoapps.django_comment_common.utils import ThreadContext
 from openedx.core.lib.courses import get_course_by_id
+import secrets
 
 log = logging.getLogger(__name__)
 
@@ -1074,7 +1074,7 @@ def upload(request, course_id):  # ajax upload file to a question or answer  # l
 
         #request.user.assert_can_upload_file()
 
-        base_file_name = str(time.time()).replace('.', str(random.randint(0, 100000)))
+        base_file_name = str(time.time()).replace('.', str(secrets.SystemRandom().randint(0, 100000)))
         file_storage, new_file_name = store_uploaded_file(
             request, 'file-upload', cc_settings.ALLOWED_UPLOAD_FILE_TYPES, base_file_name,
             max_file_size=cc_settings.MAX_UPLOAD_FILE_SIZE

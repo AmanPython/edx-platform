@@ -2,15 +2,13 @@
 """
 Utility functions related to databases.
 """
-
-
-import random
 # TransactionManagementError used below actually *does* derive from the standard "Exception" class.
 # lint-amnesty, pylint: disable=bad-option-value, nonstandard-exception
 from contextlib import contextmanager
 from django.db import DEFAULT_DB_ALIAS, transaction  # lint-amnesty, pylint: disable=unused-import
 
 from openedx.core.lib.cache_utils import get_cache
+import secrets
 
 OUTER_ATOMIC_CACHE_NAME = 'db.outer_atomic'
 
@@ -133,9 +131,9 @@ def generate_int_id(minimum=0, maximum=MYSQL_MAX_INT, used_ids=None):
     if used_ids is None:
         used_ids = []
 
-    cid = random.randint(minimum, maximum)
+    cid = secrets.SystemRandom().randint(minimum, maximum)
 
     while cid in used_ids:
-        cid = random.randint(minimum, maximum)
+        cid = secrets.SystemRandom().randint(minimum, maximum)
 
     return cid

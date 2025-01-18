@@ -2,7 +2,6 @@
 
 
 import itertools
-import random
 import string
 from collections import namedtuple
 from unittest import TestCase, mock
@@ -14,6 +13,7 @@ from xblock.runtime import Runtime
 
 from openedx.core.lib.safe_lxml import etree
 from xmodule.discussion_block import DiscussionXBlock
+import secrets
 
 
 def attribute_pair_repr(self):
@@ -37,7 +37,7 @@ def _random_string():
     """
     Generates random string
     """
-    return ''.join(random.choice(string.ascii_lowercase, ) for _ in range(12))
+    return ''.join(secrets.choice(string.ascii_lowercase, ) for _ in range(12))
 
 
 def _make_attribute_test_cases():

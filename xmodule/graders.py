@@ -6,7 +6,6 @@ Code used to calculate learner grades.
 import abc
 import inspect
 import logging
-import random
 import sys
 from collections import OrderedDict
 from datetime import datetime
@@ -15,6 +14,7 @@ from pytz import UTC
 from django.utils.translation import gettext_lazy as _
 
 from xmodule.util.misc import get_short_labeler
+import secrets
 
 
 log = logging.getLogger("edx.courseware")
@@ -377,8 +377,8 @@ class AssignmentFormatGrader(CourseGrader):
         for i in range(max(int(float(self.min_count)), len(scores))):
             if i < len(scores) or generate_random_scores:
                 if generate_random_scores:  	# for debugging!
-                    earned = random.randint(2, 15)
-                    possible = random.randint(earned, 15)
+                    earned = secrets.SystemRandom().randint(2, 15)
+                    possible = secrets.SystemRandom().randint(earned, 15)
                     section_name = _("Generated")
 
                 else:

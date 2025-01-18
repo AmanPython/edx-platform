@@ -5,11 +5,11 @@ Utilities for instructor unit tests
 
 import datetime
 import json
-import random
 
 from pytz import UTC
 
 from common.djangoapps.util.date_utils import get_default_time_display
+import secrets
 
 
 class FakeInfo:
@@ -59,11 +59,11 @@ class FakeEmail(FakeInfo):
         super().__init__()
         self.id = str(email_id)  # pylint: disable=invalid-name
         # Select a random data for create field
-        year = random.randint(1950, 2000)
-        month = random.randint(1, 12)
-        day = random.randint(1, 28)
-        hour = random.randint(0, 23)
-        minute = random.randint(0, 59)
+        year = secrets.SystemRandom().randint(1950, 2000)
+        month = secrets.SystemRandom().randint(1, 12)
+        day = secrets.SystemRandom().randint(1, 28)
+        hour = secrets.SystemRandom().randint(0, 23)
+        minute = secrets.SystemRandom().randint(0, 59)
         self.created = datetime.datetime(year, month, day, hour, minute, tzinfo=UTC)
         self.targets = FakeTargetGroup()
 

@@ -3,15 +3,13 @@
 """
 Generates fake XML for asset metadata.
 """
-
-
-import random
 from datetime import datetime, timedelta
 
 from lxml import etree
 from opaque_keys.edx.keys import CourseKey
 
 from xmodule.assetstore import AssetMetadata
+import secrets
 
 try:
     import click
@@ -30,7 +28,7 @@ def coin_flip():
     """
     50/50 chance
     """
-    return random.choice((True, False))
+    return secrets.choice((True, False))
 
 
 def asset_type():
@@ -41,7 +39,7 @@ def asset_type():
         (95, "asset"),
         (100, "video")
     )
-    d100 = random.randint(0, 100)
+    d100 = secrets.SystemRandom().randint(0, 100)
     for choice in asset_type_choices:
         if d100 <= choice[0]:
             return choice[1]
@@ -53,9 +51,9 @@ def filename():
     Fake a filename.
     """
     fname = ''
-    for __ in range(random.randint(10, 30)):
-        fname += random.choice(NAME_CHARS_W_UNICODE)
-    fname += random.choice(('.jpg', '.pdf', '.png', '.txt'))
+    for __ in range(secrets.SystemRandom().randint(10, 30)):
+        fname += secrets.choice(NAME_CHARS_W_UNICODE)
+    fname += secrets.choice(('.jpg', '.pdf', '.png', '.txt'))
     return fname
 
 
@@ -64,9 +62,9 @@ def pathname():
     Fake a pathname.
     """
     pname = ''
-    for __ in range(random.randint(2, 3)):
-        for __ in range(random.randint(5, 10)):
-            pname += random.choice(NAME_CHARS)
+    for __ in range(secrets.SystemRandom().randint(2, 3)):
+        for __ in range(secrets.SystemRandom().randint(5, 10)):
+            pname += secrets.choice(NAME_CHARS)
         pname += '/'
     return pname
 
@@ -87,9 +85,9 @@ def fields():
         if coin_flip():
             f['copyrighted'] = coin_flip()
         if coin_flip():
-            f['size'] = random.randint(100, 10000000)
+            f['size'] = secrets.SystemRandom().randint(100, 10000000)
         if coin_flip():
-            f['color'] = random.choice(('blue', 'pink', 'fuchsia', 'rose', 'mauve', 'black'))
+            f['color'] = secrets.choice(('blue', 'pink', 'fuchsia', 'rose', 'mauve', 'black'))
     return f
 
 
@@ -97,14 +95,14 @@ def user_id():
     """
     Fake user id.
     """
-    return random.randint(1, 100000000)
+    return secrets.SystemRandom().randint(1, 100000000)
 
 
 def versions():
     """
     Fake versions.
     """
-    curr_ver = random.randint(1, 500)
+    curr_ver = secrets.SystemRandom().randint(1, 500)
     prev_ver = curr_ver - 1
 
     def ver_str(ver):
@@ -120,7 +118,7 @@ def date_and_time():
     Fake date/time.
     """
     start_date = datetime.now()
-    time_back = timedelta(seconds=random.randint(0, 473040000))  # 15 year interval
+    time_back = timedelta(seconds=secrets.SystemRandom().randint(0, 473040000))  # 15 year interval
     return start_date - time_back
 
 
@@ -128,7 +126,7 @@ def contenttype():
     """
     Random MIME type.
     """
-    return random.choice((
+    return secrets.choice((
         'image/jpeg',
         'text/html',
         'audio/aiff',
