@@ -157,7 +157,7 @@ class StubXQueueHandler(StubHttpRequestHandler):
             'xqueue_body': json.dumps(grade_response)
         }
 
-        post(postback_url, data=data)
+        post(postback_url, data=data, timeout=60)
         self.log_message(f"XQueue: sent grading response {data} to {postback_url}")
 
     def _register_submission(self, xqueue_body_json):
@@ -183,7 +183,7 @@ class StubXQueueHandler(StubHttpRequestHandler):
                 grader_payload = xqueue_body.get('grader_payload')
 
                 if grader_payload is not None:
-                    response = post(url, data={'grader_payload': grader_payload})
+                    response = post(url, data={'grader_payload': grader_payload}, timeout=60)
                     if not response.ok:
                         self.log_error(
                             "Could register submission at URL '{}'.  Status was {}".format(

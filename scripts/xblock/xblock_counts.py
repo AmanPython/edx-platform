@@ -59,7 +59,7 @@ def _get_course_data_summary(auth_token, months_restriction, xblock_type_set, ap
         list: a list of data objects summarizing each courses xBlock usage
     """
     # Get the Course list
-    response = requests.get(api_root + '/api/courses/v1/courses/')
+    response = requests.get(api_root + '/api/courses/v1/courses/', timeout=60)
     json_result = response.json()
     num_courses = 0
     num_pages = 1
@@ -98,7 +98,7 @@ def _get_course_data_summary(auth_token, months_restriction, xblock_type_set, ap
             next_page = page_data.get('next', '')
             if not next_page:
                 break
-            json_result = requests.get(next_page).json()
+            json_result = requests.get(next_page, timeout=60).json()
 
         # print to update the screen for status
         sys.stdout.write('.')
@@ -212,7 +212,7 @@ def _get_course_block_counts(auth_token, block_url):
     """
     headers = {'Authorization': f'Bearer {auth_token}'}
 
-    response = requests.get(block_url, headers=headers)
+    response = requests.get(block_url, headers=headers, timeout=60)
     if response.status_code != 200:
         print(f"url {block_url} returned status code {response.status_code}")
         return {}
@@ -333,7 +333,7 @@ def get_access_token(username, password, oauth2_client_id, api_root):
             'username': username,
             'password': password
         },
-    )
+    timeout=60)
     return json.loads(response.text).get('access_token', None)
 
 if __name__ == "__main__":

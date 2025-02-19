@@ -80,7 +80,7 @@ def create_zendesk_ticket(
     url = urljoin(settings.ZENDESK_URL, '/api/v2/tickets.json')
 
     try:
-        response = requests.post(url, data=payload, headers=_get_request_headers())
+        response = requests.post(url, data=payload, headers=_get_request_headers(), timeout=60)
 
         # Check for HTTP codes other than 201 (Created)
         if response.status_code == status.HTTP_201_CREATED:
@@ -134,7 +134,7 @@ def post_additional_info_as_comment(ticket_id, additional_info):
     url = urljoin(settings.ZENDESK_URL, f'api/v2/tickets/{ticket_id}.json')
 
     try:
-        response = requests.put(url, data=json.dumps(data), headers=_get_request_headers())
+        response = requests.put(url, data=json.dumps(data), headers=_get_request_headers(), timeout=60)
         if response.status_code == 200:
             log.debug(f'Successfully created comment for ticket {ticket_id}')
         else:

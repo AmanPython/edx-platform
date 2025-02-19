@@ -48,7 +48,7 @@ class StubLtiServiceTest(unittest.TestCase):
         Tests that LTI server processes request with right program path but with wrong header.
         """
         self.launch_uri = self.uri + 'wrong_lti_endpoint'
-        response = requests.post(self.launch_uri, data=self.payload)
+        response = requests.post(self.launch_uri, data=self.payload, timeout=60)
         assert b'Invalid request URL' in response.content
 
     def test_wrong_signature(self):
@@ -56,7 +56,7 @@ class StubLtiServiceTest(unittest.TestCase):
         Tests that LTI server processes request with right program
         path and responses with incorrect signature.
         """
-        response = requests.post(self.launch_uri, data=self.payload)
+        response = requests.post(self.launch_uri, data=self.payload, timeout=60)
         assert b'Wrong LTI signature' in response.content
 
     @patch('common.djangoapps.terrain.stubs.lti.signature.verify_hmac_sha1', return_value=True)
@@ -64,12 +64,12 @@ class StubLtiServiceTest(unittest.TestCase):
         """
         Success lti launch.
         """
-        response = requests.post(self.launch_uri, data=self.payload)
+        response = requests.post(self.launch_uri, data=self.payload, timeout=60)
         assert b'This is LTI tool. Success.' in response.content
 
     @patch('common.djangoapps.terrain.stubs.lti.signature.verify_hmac_sha1', return_value=True)
     def test_send_graded_result(self, verify_hmac):  # pylint: disable=unused-argument
-        response = requests.post(self.launch_uri, data=self.payload)
+        response = requests.post(self.launch_uri, data=self.payload, timeout=60)
         assert b'This is LTI tool. Success.' in response.content
         grade_uri = self.uri + 'grade'
         with patch('common.djangoapps.terrain.stubs.lti.requests.post') as mocked_post:
@@ -79,7 +79,7 @@ class StubLtiServiceTest(unittest.TestCase):
 
     @patch('common.djangoapps.terrain.stubs.lti.signature.verify_hmac_sha1', return_value=True)
     def test_lti20_outcomes_put(self, verify_hmac):  # pylint: disable=unused-argument
-        response = requests.post(self.launch_uri, data=self.payload)
+        response = requests.post(self.launch_uri, data=self.payload, timeout=60)
         assert b'This is LTI tool. Success.' in response.content
         grade_uri = self.uri + 'lti2_outcome'
         with patch('common.djangoapps.terrain.stubs.lti.requests.put') as mocked_put:
@@ -89,7 +89,7 @@ class StubLtiServiceTest(unittest.TestCase):
 
     @patch('common.djangoapps.terrain.stubs.lti.signature.verify_hmac_sha1', return_value=True)
     def test_lti20_outcomes_put_like_delete(self, verify_hmac):  # pylint: disable=unused-argument
-        response = requests.post(self.launch_uri, data=self.payload)
+        response = requests.post(self.launch_uri, data=self.payload, timeout=60)
         assert b'This is LTI tool. Success.' in response.content
         grade_uri = self.uri + 'lti2_delete'
         with patch('common.djangoapps.terrain.stubs.lti.requests.put') as mocked_put:

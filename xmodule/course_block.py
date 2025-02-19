@@ -171,7 +171,7 @@ class Textbook:  # lint-amnesty, pylint: disable=missing-class-docstring
         # Get the table of contents from S3
         log.info("Retrieving textbook table of contents from %s", toc_url)
         try:
-            r = requests.get(toc_url)
+            r = requests.get(toc_url, timeout=60)
         except Exception as err:
             msg = f'Error {err}: Unable to retrieve textbook table of contents at {toc_url}'
             log.error(msg)
