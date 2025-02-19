@@ -90,7 +90,7 @@ def download_youtube_video_thumbnail(youtube_id):
         thumbnail_url = urljoin('https://img.youtube.com', '/vi/{youtube_id}/{thumbnail_quality}.jpg'.format(
             youtube_id=youtube_id, thumbnail_quality=thumbnail_quality
         ))
-        response = requests.get(thumbnail_url)
+        response = requests.get(thumbnail_url, timeout=60)
         if response.status_code == requests.codes.ok:   # pylint: disable=no-member
             thumbnail_content = response.content
             thumbnail_content_type = response.headers['content-type']

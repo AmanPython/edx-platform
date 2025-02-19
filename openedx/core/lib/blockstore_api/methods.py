@@ -61,7 +61,7 @@ def api_request(method, url, **kwargs):
     if not settings.BLOCKSTORE_API_AUTH_TOKEN:
         raise ImproperlyConfigured("Cannot use Blockstore unless BLOCKSTORE_API_AUTH_TOKEN is set.")
     kwargs.setdefault('headers', {})['Authorization'] = f"Token {settings.BLOCKSTORE_API_AUTH_TOKEN}"
-    response = requests.request(method, url, **kwargs)
+    response = requests.request(method, url, **kwargs, timeout=60)
     if response.status_code == 404:
         raise NotFound
     response.raise_for_status()
@@ -427,7 +427,7 @@ def get_bundle_file_data(bundle_uuid, path, use_draft=None):
     Do not use this for large files!
     """
     metadata = get_bundle_file_metadata(bundle_uuid, path, use_draft)
-    with requests.get(metadata.url, stream=True) as r:
+    with requests.get(metadata.url, stream=True, timeout=60) as r:
         return r.content
 
 

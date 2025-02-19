@@ -1424,7 +1424,7 @@ class EdxModulestoreImportClient(BaseEdxImportClient):
         """
         if asset_file.data:
             return asset_file.data
-        resp = requests.get(f"http://{settings.CMS_BASE}" + asset_file.url)
+        resp = requests.get(f"http://{settings.CMS_BASE}" + asset_file.url, timeout=60)
         resp.raise_for_status()
         return resp.content
 
@@ -1486,7 +1486,7 @@ class EdxApiImportClient(BaseEdxImportClient):
             path = asset_file['url'][len(self.studio_url):]
             resp = self._call('get', path)
         else:
-            resp = requests.get(asset_file['url'])
+            resp = requests.get(asset_file['url'], timeout=60)
             resp.raise_for_status()
         return resp.content
 
