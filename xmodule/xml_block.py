@@ -16,7 +16,7 @@ from xmodule.modulestore.inheritance import InheritanceKeyValueStore, own_metada
 log = logging.getLogger(__name__)
 
 # assume all XML files are persisted as utf-8.
-EDX_XML_PARSER = XMLParser(dtd_validation=False, load_dtd=False, remove_blank_text=True, encoding='utf-8')
+EDX_XML_PARSER = XMLParser(dtd_validation=False, load_dtd=False, remove_blank_text=True, encoding='utf-8', resolve_entities=False)
 
 
 def name_to_pathname(name):

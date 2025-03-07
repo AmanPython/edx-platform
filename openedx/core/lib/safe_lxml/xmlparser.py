@@ -71,7 +71,7 @@ class GlobalParserTLS(threading.local):
     element_class = RestrictedElement
 
     def createDefaultParser(self):  # pylint: disable=missing-function-docstring
-        parser = _etree.XMLParser(**self.parser_config)
+        parser = _etree.XMLParser(**self.parser_config, resolve_entities=False)
         element_class = self.element_class
         if self.element_class is not None:
             lookup = _etree.ElementDefaultClassLookup(element=element_class)
