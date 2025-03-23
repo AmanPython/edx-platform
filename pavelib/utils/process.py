@@ -11,6 +11,7 @@ import sys
 
 import psutil
 from paver import tasks
+from security import safe_command
 
 
 def kill_process(proc):
@@ -53,7 +54,7 @@ def run_multi_processes(cmd_list, out_log=None, err_log=None):
 
     try:
         for cmd in cmd_list:
-            pids.extend([subprocess.Popen(cmd, **kwargs)])
+            pids.extend([safe_command.run(subprocess.Popen, cmd, **kwargs)])
 
         # pylint: disable=unused-argument
         def _signal_handler(*args):
@@ -100,7 +101,7 @@ def run_background_process(cmd, out_log=None, err_log=None, cwd=None):
         err_log_file = open(err_log, 'w')  # lint-amnesty, pylint: disable=consider-using-with
         kwargs['stderr'] = err_log_file
 
-    proc = subprocess.Popen(cmd, **kwargs)  # lint-amnesty, pylint: disable=consider-using-with
+    proc = safe_command.run(subprocess.Popen, cmd, **kwargs)  # lint-amnesty, pylint: disable=consider-using-with
 
     def exit_handler():
         """
