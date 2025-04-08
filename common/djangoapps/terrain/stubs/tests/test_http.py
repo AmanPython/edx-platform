@@ -9,6 +9,7 @@ import unittest
 import requests
 
 from common.djangoapps.terrain.stubs.http import StubHttpRequestHandler, StubHttpService, require_params
+from security import safe_requests
 
 
 class StubHttpServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disable=missing-class-docstring
@@ -98,15 +99,15 @@ class RequireParamTest(unittest.TestCase):
     def test_require_get_param(self):
 
         # Expect success when we provide the required param
-        response = requests.get(self.url, params={"test_param": 2})
+        response = safe_requests.get(self.url, params={"test_param": 2})
         assert response.status_code == 200
 
         # Expect failure when we do not proivde the param
-        response = requests.get(self.url)
+        response = safe_requests.get(self.url)
         assert response.status_code == 400
 
         # Expect failure when we provide an empty param
-        response = requests.get(self.url + "?test_param=")
+        response = safe_requests.get(self.url + "?test_param=")
         assert response.status_code == 400
 
     def test_require_post_param(self):
