@@ -23,6 +23,7 @@ from common.djangoapps.third_party_auth.utils import SAML_XML_NS
 from common.djangoapps.third_party_auth.views import inactive_user_view
 
 from .testutil import AUTH_FEATURE_ENABLED, AUTH_FEATURES_KEY, SAMLTestCase
+import lxml.etree
 
 XMLDSIG_XML_NS = 'http://www.w3.org/2000/09/xmldsig#'
 
@@ -122,7 +123,7 @@ class SAMLMetadataTest(SAMLTestCase):
         assert response['Content-Type'] == 'text/xml'
         # The result should be valid XML:
         try:
-            metadata_doc = etree.fromstring(response.content)
+            metadata_doc = etree.fromstring(response.content, parser=lxml.etree.XMLParser(resolve_entities=False))
         except etree.LxmlError:
             self.fail('SAML metadata must be valid XML')
         assert metadata_doc.tag == etree.QName(SAML_XML_NS, 'EntityDescriptor')

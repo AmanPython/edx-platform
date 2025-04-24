@@ -24,6 +24,7 @@ from cms.djangoapps.models.settings.course_grading import CourseGradingModel
 import openedx.core.djangoapps.content_staging.api as content_staging_api
 
 from .utils import reverse_course_url, reverse_library_url, reverse_usage_url
+import lxml.etree
 
 log = logging.getLogger(__name__)
 
@@ -241,7 +242,7 @@ def import_staged_content_from_user_clipboard(parent_key: UsageKey, request) -> 
         return None, StaticFileNotices()
     olx_str = content_staging_api.get_staged_content_olx(user_clipboard.content.id)
     static_files = content_staging_api.get_staged_content_static_files(user_clipboard.content.id)
-    node = etree.fromstring(olx_str)
+    node = etree.fromstring(olx_str, parser=lxml.etree.XMLParser(resolve_entities=False))
     store = modulestore()
     with store.bulk_operations(parent_key.course_key):
         parent_descriptor = store.get_item(parent_key)

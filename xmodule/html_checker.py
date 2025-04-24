@@ -1,6 +1,7 @@
 # lint-amnesty, pylint: disable=missing-module-docstring
 
 from lxml import etree
+import lxml.etree
 
 
 def check_html(html):
@@ -10,7 +11,7 @@ def check_html(html):
     '''
     parser = etree.HTMLParser()
     try:
-        etree.fromstring(html, parser)
+        etree.fromstring(html, parser, parser=lxml.etree.XMLParser(resolve_entities=False))
         return True
     except Exception:   # pylint: disable=broad-except
         pass

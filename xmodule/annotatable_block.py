@@ -19,6 +19,7 @@ from xmodule.x_module import (
     XModuleMixin,
     XModuleToXBlockMixin,
 )
+import lxml.etree
 
 log = logging.getLogger(__name__)
 
@@ -135,10 +136,10 @@ class AnnotatableBlock(
     def _render_content(self):
         """ Renders annotatable content with annotation spans and returns HTML. """
 
-        xmltree = etree.fromstring(self.data)
+        xmltree = etree.fromstring(self.data, parser=lxml.etree.XMLParser(resolve_entities=False))
         content = etree.tostring(xmltree, encoding='unicode')
 
-        xmltree = etree.fromstring(content)
+        xmltree = etree.fromstring(content, parser=lxml.etree.XMLParser(resolve_entities=False))
         xmltree.tag = 'div'
         if 'display_name' in xmltree.attrib:
             del xmltree.attrib['display_name']
@@ -162,7 +163,7 @@ class AnnotatableBlock(
     def get_html(self):
         """ Renders parameters to template. """
 
-        xmltree = etree.fromstring(self.data)
+        xmltree = etree.fromstring(self.data, parser=lxml.etree.XMLParser(resolve_entities=False))
         instructions = self._extract_instructions(xmltree)
 
         context = {

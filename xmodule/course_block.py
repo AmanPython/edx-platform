@@ -29,6 +29,7 @@ from xmodule.tabs import CourseTabList, InvalidTabsException
 
 from .fields import Date
 from .modulestore.exceptions import InvalidProctoringProvider
+import lxml.etree
 
 log = logging.getLogger(__name__)
 
@@ -179,7 +180,7 @@ class Textbook:  # lint-amnesty, pylint: disable=missing-class-docstring
 
         # TOC is XML. Parse it
         try:
-            table_of_contents = etree.fromstring(r.text)
+            table_of_contents = etree.fromstring(r.text, parser=lxml.etree.XMLParser(resolve_entities=False))
         except Exception as err:
             msg = f'Error {err}: Unable to parse XML for textbook table of contents at {toc_url}'
             log.error(msg)

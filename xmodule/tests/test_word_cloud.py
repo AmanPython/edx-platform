@@ -12,6 +12,7 @@ from xblock.field_data import DictFieldData
 
 from xmodule.word_cloud_block import WordCloudBlock
 from . import get_test_descriptor_system, get_test_system
+import lxml.etree
 
 
 class WordCloudBlockTest(TestCase):
@@ -40,7 +41,7 @@ class WordCloudBlockTest(TestCase):
             'instructions="What are your favorite fruits?" num_inputs="3" num_top_words="100"/>\n'
         )
 
-        olx_element = etree.fromstring(original_xml)
+        olx_element = etree.fromstring(original_xml, parser=lxml.etree.XMLParser(resolve_entities=False))
         id_generator = Mock()
         block = WordCloudBlock.parse_xml(olx_element, runtime, None, id_generator)
         block.location = BlockUsageLocator(

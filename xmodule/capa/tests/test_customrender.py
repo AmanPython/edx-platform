@@ -7,6 +7,7 @@ from lxml import etree
 
 from xmodule.capa import customrender
 from xmodule.capa.tests.helpers import test_capa_system
+import lxml.etree
 
 # just a handy shortcut
 lookup_tag = customrender.registry.get_class_for_tag
@@ -47,7 +48,7 @@ class SolutionRenderTest(unittest.TestCase):
     def test_rendering(self):
         solution = 'To compute unicorns, count them.'
         xml_str = """<solution id="solution_12">{s}</solution>""".format(s=solution)
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         renderer = lookup_tag('solution')(test_capa_system(), element)
 
@@ -66,7 +67,7 @@ class MathRenderTest(unittest.TestCase):
 
     def check_parse(self, latex_in, mathjax_out):  # lint-amnesty, pylint: disable=missing-function-docstring
         xml_str = """<math>{tex}</math>""".format(tex=latex_in)
-        element = etree.fromstring(xml_str)
+        element = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         renderer = lookup_tag('math')(test_capa_system(), element)
 

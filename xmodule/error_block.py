@@ -22,6 +22,7 @@ from xmodule.x_module import (
     XModuleMixin,
     XModuleToXBlockMixin,
 )
+import lxml.etree
 
 log = logging.getLogger(__name__)
 
@@ -162,7 +163,7 @@ class ErrorBlock(
 
         try:
             # If this is already an error tag, don't want to re-wrap it.
-            xml_obj = etree.fromstring(xml_data)
+            xml_obj = etree.fromstring(xml_data, parser=lxml.etree.XMLParser(resolve_entities=False))
             if xml_obj.tag == 'error':
                 xml_data = xml_obj.text
                 error_node = xml_obj.find('error_msg')
@@ -197,7 +198,7 @@ class ErrorBlock(
         files, etc.  That would just get re-wrapped on import.
         '''
         try:
-            xml = etree.fromstring(self.contents)
+            xml = etree.fromstring(self.contents, parser=lxml.etree.XMLParser(resolve_entities=False))
             return etree.tostring(xml, encoding='unicode')
         except etree.XMLSyntaxError:
             # still not valid.
@@ -213,7 +214,7 @@ class ErrorBlock(
         `node`.
         """
         xml_string = self.export_to_xml(self.runtime.export_fs)
-        exported_node = etree.fromstring(xml_string)
+        exported_node = etree.fromstring(xml_string, parser=lxml.etree.XMLParser(resolve_entities=False))
         node.tag = exported_node.tag
         node.text = exported_node.text
         node.tail = exported_node.tail

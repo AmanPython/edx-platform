@@ -22,6 +22,7 @@ from xmodule.modulestore import ModuleStoreEnum  # lint-amnesty, pylint: disable
 from xmodule.modulestore.django import modulestore  # lint-amnesty, pylint: disable=wrong-import-order
 from xmodule.modulestore.exceptions import DuplicateCourseError  # lint-amnesty, pylint: disable=wrong-import-order
 from xmodule.modulestore.xml_importer import import_library_from_xml  # lint-amnesty, pylint: disable=wrong-import-order
+import lxml.etree
 
 
 class Command(BaseCommand):
@@ -60,7 +61,7 @@ class Command(BaseCommand):
         rel_xml_path = os.path.relpath(abs_xml_path, data_root)
 
         # Gather library metadata from XML file
-        xml_root = etree.parse(abs_xml_path / 'library.xml').getroot()
+        xml_root = etree.parse(abs_xml_path / 'library.xml', parser=lxml.etree.XMLParser(resolve_entities=False)).getroot()
         if xml_root.tag != 'library':
             raise CommandError(f'Failed to import {archive_path}: Not a library archive')
 

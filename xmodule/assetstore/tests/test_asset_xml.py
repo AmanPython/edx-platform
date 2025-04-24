@@ -11,6 +11,7 @@ from path import Path as path
 
 from xmodule.assetstore import AssetMetadata
 from xmodule.modulestore.tests.test_assetstore import AssetStoreTestData
+import lxml.etree
 
 
 class TestAssetXml(unittest.TestCase):
@@ -47,7 +48,7 @@ class TestAssetXml(unittest.TestCase):
         asset = etree.SubElement(root, "asset")
         asset_md.to_xml(asset)
         # If this line does *not* raise, the XML is valid.
-        etree.fromstring(etree.tostring(root), self.xmlparser)
+        etree.fromstring(etree.tostring(root), self.xmlparser, parser=lxml.etree.XMLParser(resolve_entities=False))
         new_asset_key = self.course_id.make_asset_key('tmp', 'tmp')
         new_asset_md = AssetMetadata(new_asset_key)
         new_asset_md.from_xml(asset)
@@ -78,4 +79,4 @@ class TestAssetXml(unittest.TestCase):
         root = etree.Element("assets")
         AssetMetadata.add_all_assets_as_xml(root, self.course_assets)
         # If this line does *not* raise, the XML is valid.
-        etree.fromstring(etree.tostring(root), self.xmlparser)
+        etree.fromstring(etree.tostring(root), self.xmlparser, parser=lxml.etree.XMLParser(resolve_entities=False))

@@ -59,6 +59,7 @@ from common.djangoapps.student.models import CourseEnrollment
 from common.djangoapps.student.roles import CourseCreatorRole, CourseInstructorRole
 from openedx.core.djangoapps.django_comment_common.utils import are_permissions_roles_seeded
 from openedx.core.lib.tempdir import mkdtemp_clean
+import lxml.etree
 
 TEST_DATA_CONTENTSTORE = copy.deepcopy(settings.CONTENTSTORE)
 TEST_DATA_CONTENTSTORE['DOC_STORE_CONFIG']['db'] = 'test_xcontent_%s' % uuid4().hex
@@ -2085,7 +2086,7 @@ class ContentLicenseTest(ContentStoreTestCase):
         fname = f"{self.course.id.run}.xml"
         run_file_path = root_dir / "test_license" / "course" / fname
         with run_file_path.open() as f:
-            run_xml = etree.parse(f)
+            run_xml = etree.parse(f, parser=lxml.etree.XMLParser(resolve_entities=False))
             self.assertEqual(run_xml.getroot().get("license"), "creative-commons: BY SA")
 
     def test_video_license_export(self):
@@ -2099,7 +2100,7 @@ class ContentLicenseTest(ContentStoreTestCase):
         fname = f"{video_block.scope_ids.usage_id.block_id}.xml"
         video_file_path = root_dir / "test_license" / "video" / fname
         with video_file_path.open() as f:
-            video_xml = etree.parse(f)
+            video_xml = etree.parse(f, parser=lxml.etree.XMLParser(resolve_entities=False))
             self.assertEqual(video_xml.getroot().get("license"), "all-rights-reserved")
 
     def test_license_import(self):

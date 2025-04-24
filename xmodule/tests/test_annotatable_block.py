@@ -11,6 +11,7 @@ from xblock.fields import ScopeIds
 from xmodule.annotatable_block import AnnotatableBlock
 
 from . import get_test_system
+import lxml.etree
 
 
 class AnnotatableBlockTestCase(unittest.TestCase):  # lint-amnesty, pylint: disable=missing-class-docstring
@@ -40,7 +41,7 @@ class AnnotatableBlockTestCase(unittest.TestCase):  # lint-amnesty, pylint: disa
         )
 
     def test_annotation_data_attr(self):
-        el = etree.fromstring('<annotation title="bar" body="foo" problem="0">test</annotation>')
+        el = etree.fromstring('<annotation title="bar" body="foo" problem="0">test</annotation>', parser=lxml.etree.XMLParser(resolve_entities=False))
 
         expected_attr = {
             'data-comment-body': {'value': 'foo', '_delete': 'body'},
@@ -55,7 +56,7 @@ class AnnotatableBlockTestCase(unittest.TestCase):  # lint-amnesty, pylint: disa
 
     def test_annotation_class_attr_default(self):
         xml = '<annotation title="x" body="y" problem="0">test</annotation>'
-        el = etree.fromstring(xml)
+        el = etree.fromstring(xml, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         expected_attr = {'class': {'value': 'annotatable-span highlight'}}
         actual_attr = self.annotatable._get_annotation_class_attr(0, el)  # lint-amnesty, pylint: disable=protected-access
@@ -67,7 +68,7 @@ class AnnotatableBlockTestCase(unittest.TestCase):  # lint-amnesty, pylint: disa
         xml = '<annotation title="x" body="y" problem="0" highlight="{highlight}">test</annotation>'
 
         for color in self.annotatable.HIGHLIGHT_COLORS:
-            el = etree.fromstring(xml.format(highlight=color))
+            el = etree.fromstring(xml.format(highlight=color), parser=lxml.etree.XMLParser(resolve_entities=False))
             value = f'annotatable-span highlight highlight-{color}'
 
             expected_attr = {
@@ -85,7 +86,7 @@ class AnnotatableBlockTestCase(unittest.TestCase):  # lint-amnesty, pylint: disa
         xml = '<annotation title="x" body="y" problem="0" highlight="{highlight}">test</annotation>'
 
         for invalid_color in ['rainbow', 'blink', 'invisible', '', None]:
-            el = etree.fromstring(xml.format(highlight=invalid_color))
+            el = etree.fromstring(xml.format(highlight=invalid_color), parser=lxml.etree.XMLParser(resolve_entities=False))
             expected_attr = {
                 'class': {
                     'value': 'annotatable-span highlight',
@@ -99,9 +100,9 @@ class AnnotatableBlockTestCase(unittest.TestCase):  # lint-amnesty, pylint: disa
 
     def test_render_annotation(self):
         expected_html = '<span class="annotatable-span highlight highlight-yellow" data-comment-title="x" data-comment-body="y" data-problem-id="0">z</span>'  # lint-amnesty, pylint: disable=line-too-long
-        expected_el = etree.fromstring(expected_html)
+        expected_el = etree.fromstring(expected_html, parser=lxml.etree.XMLParser(resolve_entities=False))
 
-        actual_el = etree.fromstring('<annotation title="x" body="y" problem="0" highlight="yellow">z</annotation>')
+        actual_el = etree.fromstring('<annotation title="x" body="y" problem="0" highlight="yellow">z</annotation>', parser=lxml.etree.XMLParser(resolve_entities=False))
         self.annotatable._render_annotation(0, actual_el)  # lint-amnesty, pylint: disable=protected-access
 
         assert expected_el.tag == actual_el.tag
@@ -110,7 +111,7 @@ class AnnotatableBlockTestCase(unittest.TestCase):  # lint-amnesty, pylint: disa
 
     def test_render_content(self):
         content = self.annotatable._render_content()  # lint-amnesty, pylint: disable=protected-access
-        el = etree.fromstring(content)
+        el = etree.fromstring(content, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         assert 'div' == el.tag, 'root tag is a div'
 
@@ -124,13 +125,13 @@ class AnnotatableBlockTestCase(unittest.TestCase):  # lint-amnesty, pylint: disa
             assert key in context
 
     def test_extract_instructions(self):
-        xmltree = etree.fromstring(self.sample_xml)
+        xmltree = etree.fromstring(self.sample_xml, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         expected_xml = "<div>Read the text.</div>"
         actual_xml = self.annotatable._extract_instructions(xmltree)  # lint-amnesty, pylint: disable=protected-access
         assert actual_xml is not None
         assert expected_xml.strip() == actual_xml.strip()
 
-        xmltree = etree.fromstring('<annotatable>foo</annotatable>')
+        xmltree = etree.fromstring('<annotatable>foo</annotatable>', parser=lxml.etree.XMLParser(resolve_entities=False))
         actual = self.annotatable._extract_instructions(xmltree)  # lint-amnesty, pylint: disable=protected-access
         assert actual is None

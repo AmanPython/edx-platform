@@ -8,6 +8,7 @@ import unittest
 from lxml import etree
 
 from xmodule.annotator_mixin import get_extension, get_instructions, html_to_text
+import lxml.etree
 
 
 class HelperFunctionTest(unittest.TestCase):
@@ -28,14 +29,14 @@ class HelperFunctionTest(unittest.TestCase):
         Function takes in an input of a specific xml string with surrounding instructions
         tags and returns a valid html string.
         """
-        xmltree = etree.fromstring(self.sample_xml)
+        xmltree = etree.fromstring(self.sample_xml, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         expected_xml = "<div><p>Helper Test Instructions.</p></div>"
         actual_xml = get_instructions(xmltree)
         assert actual_xml is not None
         assert expected_xml.strip() == actual_xml.strip()
 
-        xmltree = etree.fromstring('<annotatable>foo</annotatable>')
+        xmltree = etree.fromstring('<annotatable>foo</annotatable>', parser=lxml.etree.XMLParser(resolve_entities=False))
         actual = get_instructions(xmltree)
         assert actual is None
 
