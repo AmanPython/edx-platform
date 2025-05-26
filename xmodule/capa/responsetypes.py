@@ -2925,7 +2925,7 @@ class ExternalResponse(LoncapaResponse):
         try:
             # call external server. TODO: synchronous call, can block for a
             # long time
-            req = requests.post(self.url, data=payload)
+            req = requests.post(self.url, data=payload, timeout=60)
         except Exception as err:
             msg = 'Error {0} - cannot connect to external server url={1}'.format(err, self.url)
             log.error(msg)

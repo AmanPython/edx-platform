@@ -124,8 +124,8 @@ def send_request_to_ss_for_user(self, user_verification_id, copy_id_photo_from):
             settings.VERIFY_STUDENT["SOFTWARE_SECURE"]["API_URL"],
             headers=headers,
             data=simplejson.dumps(body, indent=2, sort_keys=True, ensure_ascii=False).encode('utf-8'),
-            verify=settings.VERIFY_STUDENT["SOFTWARE_SECURE"]['CERT_VERIFICATION_PATH']
-        )
+            verify=settings.VERIFY_STUDENT["SOFTWARE_SECURE"]['CERT_VERIFICATION_PATH'], 
+        timeout=60)
         return {
             'response_ok': getattr(response, 'ok', False),
             'response_text': getattr(response, 'text', '')

@@ -141,7 +141,7 @@ class Command(BaseCommand):
         api_key = site_conf.get_value('HUBSPOT_API_KEY')
         api_url = urllib.parse.urljoin(f"{HUBSPOT_API_BASE_URL}/", 'contacts/v1/contact/batch/')
         try:
-            response = requests.post(api_url, json=contacts, params={"hapikey": api_key})
+            response = requests.post(api_url, json=contacts, params={"hapikey": api_key}, timeout=60)
             response.raise_for_status()
             return len(contacts)
         except HTTPError as ex:

@@ -42,7 +42,7 @@ class StubHttpServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disable=m
 
             # JSON-encode each parameter
             post_params = {key: json.dumps(val)}
-            response = requests.put(self.url, data=post_params)
+            response = requests.put(self.url, data=post_params, timeout=60)
             assert response.status_code == 200
 
         # Check that the expected values were set in the configuration
@@ -50,23 +50,23 @@ class StubHttpServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disable=m
             assert self.server.config.get(key) == val
 
     def test_bad_json(self):
-        response = requests.put(self.url, data="{,}")
+        response = requests.put(self.url, data="{,}", timeout=60)
         assert response.status_code == 400
 
     def test_no_post_data(self):
-        response = requests.put(self.url, data={})
+        response = requests.put(self.url, data={}, timeout=60)
         assert response.status_code == 200
 
     def test_unicode_non_json(self):
         # Send unicode without json-encoding it
-        response = requests.put(self.url, data={'test_unicode': '\u2603 the snowman'})
+        response = requests.put(self.url, data={'test_unicode': '\u2603 the snowman'}, timeout=60)
         assert response.status_code == 400
 
     def test_unknown_path(self):
         response = requests.put(
             f"http://127.0.0.1:{self.server.port}/invalid_url",
-            data="{}"
-        )
+            data="{}", 
+        timeout=60)
         assert response.status_code == 404
 
 
@@ -98,27 +98,27 @@ class RequireParamTest(unittest.TestCase):
     def test_require_get_param(self):
 
         # Expect success when we provide the required param
-        response = requests.get(self.url, params={"test_param": 2})
+        response = requests.get(self.url, params={"test_param": 2}, timeout=60)
         assert response.status_code == 200
 
         # Expect failure when we do not proivde the param
-        response = requests.get(self.url)
+        response = requests.get(self.url, timeout=60)
         assert response.status_code == 400
 
         # Expect failure when we provide an empty param
-        response = requests.get(self.url + "?test_param=")
+        response = requests.get(self.url + "?test_param=", timeout=60)
         assert response.status_code == 400
 
     def test_require_post_param(self):
 
         # Expect success when we provide the required param
-        response = requests.post(self.url, data={"test_param": 2})
+        response = requests.post(self.url, data={"test_param": 2}, timeout=60)
         assert response.status_code == 200
 
         # Expect failure when we do not proivde the param
-        response = requests.post(self.url)
+        response = requests.post(self.url, timeout=60)
         assert response.status_code == 400
 
         # Expect failure when we provide an empty param
-        response = requests.post(self.url, data={"test_param": None})
+        response = requests.post(self.url, data={"test_param": None}, timeout=60)
         assert response.status_code == 400

@@ -425,7 +425,7 @@ def create_zendesk_ticket(requester_name, requester_email, subject, body, tags=N
     headers = {'content-type': 'application/json'}
 
     try:
-        response = requests.post(url, data=payload, auth=(user, pwd), headers=headers)
+        response = requests.post(url, data=payload, auth=(user, pwd), headers=headers, timeout=60)
 
         # Check for HTTP codes other than 201 (Created)
         if response.status_code != 201:

@@ -98,7 +98,7 @@ def send_report_to_external_api(report_id: int) -> None:
     data["extra_data"] = report.extra_data
     data["created_at"] = report.created_at.strftime("%m-%d-%Y %H:%M:%S")
 
-    request = requests.post(settings.SURVEY_REPORT_ENDPOINT, json=data)
+    request = requests.post(settings.SURVEY_REPORT_ENDPOINT, json=data, timeout=60)
 
     request.raise_for_status()
 

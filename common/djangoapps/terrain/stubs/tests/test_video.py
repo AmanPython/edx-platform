@@ -42,7 +42,7 @@ class StubVideoServiceTest(unittest.TestCase):
         """
         Verify that correct hls manifest is received.
         """
-        response = requests.get(f"http://127.0.0.1:{self.server.port}/hls/history.m3u8")
+        response = requests.get(f"http://127.0.0.1:{self.server.port}/hls/history.m3u8", timeout=60)
         assert response.ok
         assert response.text == HLS_MANIFEST_TEXT.lstrip()
         assert response.headers['Access-Control-Allow-Origin'] == '*'

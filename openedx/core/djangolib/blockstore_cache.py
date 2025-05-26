@@ -221,7 +221,7 @@ def get_bundle_file_data_with_cache(bundle_uuid, path, bundle_version=None, draf
     cached list of files in each bundle if available.
     """
     file_info = get_bundle_file_metadata_with_cache(bundle_uuid, path, bundle_version, draft_name)
-    response = requests.get(file_info.url)
+    response = requests.get(file_info.url, timeout=60)
     if response.status_code != 200:
         try:
             error_response = response.content.decode('utf-8')[:500]
