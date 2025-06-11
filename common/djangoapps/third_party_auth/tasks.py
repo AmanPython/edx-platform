@@ -79,7 +79,7 @@ def fetch_saml_metadata():
             response.raise_for_status()  # May raise an HTTPError
 
             try:
-                parser = etree.XMLParser(remove_comments=True)
+                parser = etree.XMLParser(remove_comments=True, resolve_entities=False)
                 xml = etree.fromstring(response.content, parser)
             except etree.XMLSyntaxError:  # lint-amnesty, pylint: disable=try-except-raise
                 raise

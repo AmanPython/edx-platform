@@ -1867,7 +1867,7 @@ class VideoBlockTest(TestCase, VideoBlockTestBase):
             transcript_file=transcript_file_name,
             transcripts=json.dumps({language_code: transcript_file_name})
         )
-        parser = etree.XMLParser(remove_blank_text=True)
+        parser = etree.XMLParser(remove_blank_text=True, resolve_entities=False)
         expected = etree.XML(expected_str, parser=parser)
         self.assertXmlEqual(expected, actual)
 
@@ -1948,7 +1948,7 @@ class VideoBlockTest(TestCase, VideoBlockTestBase):
         self.block.edx_video_id = 'nonexistent'
         actual = self.block.definition_to_xml(resource_fs=self.file_system)
         expected_str = """<video youtube="1.00:3_yD_cEKoCk" url_name="SampleProblem"/>"""
-        parser = etree.XMLParser(remove_blank_text=True)
+        parser = etree.XMLParser(remove_blank_text=True, resolve_entities=False)
         expected = etree.XML(expected_str, parser=parser)
         self.assertXmlEqual(expected, actual)
 
@@ -1962,7 +1962,7 @@ class VideoBlockTest(TestCase, VideoBlockTestBase):
         actual = self.block.definition_to_xml(resource_fs=self.file_system)
         expected_str = '<video youtube="1.00:3_yD_cEKoCk" url_name="SampleProblem"></video>'
 
-        parser = etree.XMLParser(remove_blank_text=True)
+        parser = etree.XMLParser(remove_blank_text=True, resolve_entities=False)
         expected = etree.XML(expected_str, parser=parser)
         self.assertXmlEqual(expected, actual)
 

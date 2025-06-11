@@ -132,7 +132,7 @@ class TestUtils(TestCase):
 
     def test_parse_metadata_uses_signing_cert(self):
         entity_id = 'http://testid'
-        parser = etree.XMLParser(remove_comments=True)
+        parser = etree.XMLParser(remove_comments=True, resolve_entities=False)
         xml_text = '''<?xml version="1.0"?>
             <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="http://testid">
                 <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
@@ -161,7 +161,7 @@ class TestUtils(TestCase):
 
     def test_parse_metadata_uses_multiple_signing_cert(self):
         entity_id = 'http://testid'
-        parser = etree.XMLParser(remove_comments=True)
+        parser = etree.XMLParser(remove_comments=True, resolve_entities=False)
         xml_text = '''<?xml version="1.0"?>
             <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="http://testid">
                 <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
@@ -197,7 +197,7 @@ class TestUtils(TestCase):
 
     def test_parse_metadata_with_use_attribute_missing(self):
         entity_id = 'http://testid'
-        parser = etree.XMLParser(remove_comments=True)
+        parser = etree.XMLParser(remove_comments=True, resolve_entities=False)
         xml_text = '''<?xml version="1.0"?>
             <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="http://testid">
                 <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">

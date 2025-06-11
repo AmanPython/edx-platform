@@ -205,7 +205,7 @@ def get_transcripts_from_youtube(youtube_id, settings, i18n, youtube_transcript_
     """
     _ = i18n.gettext
 
-    utf8_parser = etree.XMLParser(encoding='utf-8')
+    utf8_parser = etree.XMLParser(encoding='utf-8', resolve_entities=False)
 
     transcript_link = get_transcript_link_from_youtube(youtube_id)
 

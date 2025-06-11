@@ -853,7 +853,7 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         namespaces = {'def': lti_spec_namespace}
 
         data = body.strip()
-        parser = etree.XMLParser(ns_clean=True, recover=True, encoding='utf-8')
+        parser = etree.XMLParser(ns_clean=True, recover=True, encoding='utf-8', resolve_entities=False)
         root = etree.fromstring(data, parser=parser)
 
         imsx_messageIdentifier = root.xpath("//def:imsx_messageIdentifier", namespaces=namespaces)[0].text or ''

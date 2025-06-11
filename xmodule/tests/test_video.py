@@ -713,7 +713,7 @@ class VideoExportTestCase(VideoBlockTestBase):
         self.block.edx_video_id = edx_video_id
 
         xml = self.block.definition_to_xml(self.file_system)
-        parser = etree.XMLParser(remove_blank_text=True)
+        parser = etree.XMLParser(remove_blank_text=True, resolve_entities=False)
         xml_string = '''\
          <video
             url_name="SampleProblem"
@@ -751,7 +751,7 @@ class VideoExportTestCase(VideoBlockTestBase):
         self.block.edx_video_id = 'test_edx_video_id'
 
         xml = self.block.definition_to_xml(self.file_system)
-        parser = etree.XMLParser(remove_blank_text=True)
+        parser = etree.XMLParser(remove_blank_text=True, resolve_entities=False)
         xml_string = '<video youtube="1.00:3_yD_cEKoCk" url_name="SampleProblem"/>'
         expected = etree.XML(xml_string, parser=parser)
         self.assertXmlEqual(expected, xml)
@@ -774,7 +774,7 @@ class VideoExportTestCase(VideoBlockTestBase):
         self.block.download_video = True
 
         xml = self.block.definition_to_xml(self.file_system)
-        parser = etree.XMLParser(remove_blank_text=True)
+        parser = etree.XMLParser(remove_blank_text=True, resolve_entities=False)
         xml_string = '''\
          <video url_name="SampleProblem" start_time="0:00:05" youtube="0.75:izygArpw-Qo,1.00:p2Q6BrNhdh8,1.25:1EeWXzPdhSA,1.50:rABDYkeK0x8" show_captions="false" download_video="true" download_track="true">
            <source src="http://www.example.com/source.mp4"/>
