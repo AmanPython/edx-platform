@@ -10,6 +10,7 @@ import sys
 from paver import tasks
 
 from pavelib.utils.process import kill_process
+from security import safe_command
 
 try:
     from pygments.console import colorize
@@ -99,7 +100,7 @@ class TestSuite:
         process = None
 
         try:
-            process = subprocess.Popen(cmd, **kwargs)  # lint-amnesty, pylint: disable=consider-using-with
+            process = safe_command.run(subprocess.Popen, cmd, **kwargs)  # lint-amnesty, pylint: disable=consider-using-with
             return self.is_success(process.wait())
         except KeyboardInterrupt:
             kill_process(process)
