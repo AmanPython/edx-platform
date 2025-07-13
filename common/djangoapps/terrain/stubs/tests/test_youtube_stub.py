@@ -8,6 +8,7 @@ import unittest
 import requests
 
 from ..youtube import StubYouTubeService
+from security import safe_requests
 
 
 class StubYouTubeServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disable=missing-class-docstring
@@ -20,12 +21,12 @@ class StubYouTubeServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disabl
         self.addCleanup(self.server.shutdown)
 
     def test_unused_url(self):
-        response = requests.get(self.url + 'unused_url')
+        response = safe_requests.get(self.url + 'unused_url')
         assert b'Unused url' == response.content
 
     @unittest.skip('Failing intermittently due to inconsistent responses from YT. See TE-871')
     def test_video_url(self):
-        response = requests.get(
+        response = safe_requests.get(
             self.url + 'test_youtube/OEoXaMPEzfM?v=2&alt=jsonc&callback=callback_func'
         )
 
@@ -34,7 +35,7 @@ class StubYouTubeServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disabl
                response.content
 
     def test_transcript_url_equal(self):
-        response = requests.get(
+        response = safe_requests.get(
             self.url + 'test_transcripts_youtube/t__eq_exist'
         )
 
@@ -43,7 +44,7 @@ class StubYouTubeServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disabl
                         'Equal transcripts</text></transcript>']).encode('utf-8') == response.content
 
     def test_transcript_url_not_equal(self):
-        response = requests.get(
+        response = safe_requests.get(
             self.url + 'test_transcripts_youtube/t_neq_exist',
         )
 
@@ -53,7 +54,7 @@ class StubYouTubeServiceTest(unittest.TestCase):  # lint-amnesty, pylint: disabl
                         '</text></transcript>']).encode('utf-8') == response.content
 
     def test_transcript_not_found(self):
-        response = requests.get(self.url + 'test_transcripts_youtube/some_id')
+        response = safe_requests.get(self.url + 'test_transcripts_youtube/some_id')
         assert 404 == response.status_code
 
     def test_reset_configuration(self):

@@ -31,6 +31,7 @@ from openedx.core.djangoapps.oauth_dispatch.jwt import create_jwt_for_user
 from openedx.core.djangolib.markup import Text
 from xmodule.modulestore.django import modulestore  # lint-amnesty, pylint: disable=wrong-import-order
 from xmodule.modulestore.exceptions import ItemNotFoundError  # lint-amnesty, pylint: disable=wrong-import-order
+from security import safe_requests
 
 log = logging.getLogger(__name__)
 
@@ -103,7 +104,7 @@ def send_request(user, course_id, page, page_size, path="", text=None):
         })
 
     try:
-        response = requests.get(
+        response = safe_requests.get(
             url,
             headers={
                 "x-annotator-auth-token": get_edxnotes_id_token(user)

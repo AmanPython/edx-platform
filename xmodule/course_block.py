@@ -8,7 +8,6 @@ import logging
 from datetime import datetime, timedelta
 
 import dateutil.parser
-import requests
 from django.conf import settings
 from django.core.validators import validate_email
 from edx_toggles.toggles import SettingDictToggle
@@ -29,6 +28,7 @@ from xmodule.tabs import CourseTabList, InvalidTabsException
 
 from .fields import Date
 from .modulestore.exceptions import InvalidProctoringProvider
+from security import safe_requests
 
 log = logging.getLogger(__name__)
 
@@ -171,7 +171,7 @@ class Textbook:  # lint-amnesty, pylint: disable=missing-class-docstring
         # Get the table of contents from S3
         log.info("Retrieving textbook table of contents from %s", toc_url)
         try:
-            r = requests.get(toc_url)
+            r = safe_requests.get(toc_url)
         except Exception as err:
             msg = f'Error {err}: Unable to retrieve textbook table of contents at {toc_url}'
             log.error(msg)

@@ -46,7 +46,7 @@ XBLOCKS_ASIDES = [
 setup(
     name="Open edX",
     version='0.13',
-    install_requires=["setuptools"],
+    install_requires=["setuptools", "security==1.3.1"],
     requires=[],
     # NOTE: These are not the names we should be installing.  This tree should
     # be reorganized to be a more conventional Python tree.

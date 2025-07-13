@@ -4,11 +4,10 @@ Unit tests for Video stub server implementation.
 
 
 import unittest
-
-import requests
 from django.conf import settings
 
 from common.djangoapps.terrain.stubs.video_source import VideoSourceHttpService
+from security import safe_requests
 
 HLS_MANIFEST_TEXT = """
 #EXTM3U
@@ -42,7 +41,7 @@ class StubVideoServiceTest(unittest.TestCase):
         """
         Verify that correct hls manifest is received.
         """
-        response = requests.get(f"http://127.0.0.1:{self.server.port}/hls/history.m3u8")
+        response = safe_requests.get(f"http://127.0.0.1:{self.server.port}/hls/history.m3u8")
         assert response.ok
         assert response.text == HLS_MANIFEST_TEXT.lstrip()
         assert response.headers['Access-Control-Allow-Origin'] == '*'
