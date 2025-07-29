@@ -14,6 +14,7 @@ from lxml.builder import ElementMaker
 from requests.exceptions import RequestException
 
 from lms.djangoapps.lti_provider.models import GradedAssignment, OutcomeService
+import lxml.etree
 
 log = logging.getLogger("edx.lti_provider")
 
@@ -199,7 +200,7 @@ def check_replace_result_response(response):
 
     try:
         xml = response.content
-        root = etree.fromstring(xml)
+        root = etree.fromstring(xml, parser=lxml.etree.XMLParser(resolve_entities=False))
     except etree.ParseError as ex:
         log.error("Outcome service response: Failed to parse XML: %s\n %s", ex, xml)
         return False

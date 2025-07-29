@@ -130,6 +130,7 @@ from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError
 
 from . import tasks
+import lxml.etree
 
 
 log = logging.getLogger(__name__)
@@ -763,7 +764,7 @@ def set_library_block_olx(usage_key, new_olx_str):
     metadata = get_library_block(usage_key)
     block_type = usage_key.block_type
     # Verify that the OLX parses, at least as generic XML:
-    node = etree.fromstring(new_olx_str)
+    node = etree.fromstring(new_olx_str, parser=lxml.etree.XMLParser(resolve_entities=False))
     if node.tag != block_type:
         raise ValueError(f"Invalid root tag in OLX, expected {block_type}")
     # Write the new XML/OLX file into the library bundle's draft

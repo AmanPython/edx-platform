@@ -28,6 +28,7 @@ from xmodule.x_module import (
     XModuleMixin,
     XModuleToXBlockMixin,
 )
+import lxml.etree
 
 
 log = logging.getLogger('edx.' + __name__)
@@ -356,7 +357,7 @@ class ConditionalBlock(
         if self.show_tag_list:
             show_str = HTML('<show sources="{sources}" />').format(
                 sources=Text(';'.join(str(location) for location in self.show_tag_list)))
-            xml_object.append(etree.fromstring(show_str))
+            xml_object.append(etree.fromstring(show_str, parser=lxml.etree.XMLParser(resolve_entities=False)))
 
         # Overwrite the original sources attribute with the value from sources_list, as
         # Locations may have been changed to Locators.

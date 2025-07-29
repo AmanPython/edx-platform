@@ -6,12 +6,13 @@ Tests stringify functions used in xmodule html
 from lxml import etree
 
 from xmodule.stringify import stringify_children
+import lxml.etree
 
 
 def test_stringify():
     text = 'Hi <div x="foo">there <span>Bruce</span><b>!</b></div>'
     html = f'''<html a="b" foo="bar">{text}</html>'''
-    xml = etree.fromstring(html)
+    xml = etree.fromstring(html, parser=lxml.etree.XMLParser(resolve_entities=False))
     out = stringify_children(xml)
     assert out == text
 
@@ -35,7 +36,7 @@ def test_stringify_again():
   which means linear except for an offset.
   </html>
   """
-    xml = etree.fromstring(html)
+    xml = etree.fromstring(html, parser=lxml.etree.XMLParser(resolve_entities=False))
     out = stringify_children(xml)
 
     print("output:")

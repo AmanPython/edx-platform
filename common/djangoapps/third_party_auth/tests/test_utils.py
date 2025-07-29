@@ -24,6 +24,7 @@ from openedx.features.enterprise_support.tests.factories import (
     EnterpriseCustomerIdentityProviderFactory,
     EnterpriseCustomerUserFactory,
 )
+import lxml.etree
 
 
 @ddt.ddt
@@ -154,7 +155,7 @@ class TestUtils(TestCase):
                 </md:IDPSSODescriptor>
             </md:EntityDescriptor>
         '''
-        xml = etree.fromstring(xml_text, parser)
+        xml = etree.fromstring(xml_text, parser, parser=lxml.etree.XMLParser(resolve_entities=False))
         public_keys, sso_url, _ = parse_metadata_xml(xml, entity_id)
         assert public_keys == ['abc+hkIuUktxkg=']
         assert sso_url == 'https://idp/SSOService.php'
@@ -190,7 +191,7 @@ class TestUtils(TestCase):
                 </md:IDPSSODescriptor>
             </md:EntityDescriptor>
         '''
-        xml = etree.fromstring(xml_text, parser)
+        xml = etree.fromstring(xml_text, parser, parser=lxml.etree.XMLParser(resolve_entities=False))
         public_keys, sso_url, _ = parse_metadata_xml(xml, entity_id)
         assert public_keys == ['abc+hkIuUktxkg=', 'xyz+ayylmao=']
         assert sso_url == 'https://idp/SSOService.php'
@@ -212,7 +213,7 @@ class TestUtils(TestCase):
                 </md:IDPSSODescriptor>
             </md:EntityDescriptor>
         '''
-        xml = etree.fromstring(xml_text, parser)
+        xml = etree.fromstring(xml_text, parser, parser=lxml.etree.XMLParser(resolve_entities=False))
         public_keys, sso_url, _ = parse_metadata_xml(xml, entity_id)
         assert public_keys == ['abc+hkIuUktxkg=']
         assert sso_url == 'https://idp/SSOService.php'

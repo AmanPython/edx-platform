@@ -21,6 +21,7 @@ from openedx.core.djangolib.blockstore_cache import (
 )
 from openedx.core.lib import blockstore_api
 from openedx.core.lib.xblock_serializer.api import serialize_modulestore_block_for_blockstore
+import lxml.etree
 
 log = logging.getLogger(__name__)
 
@@ -198,5 +199,5 @@ def xml_for_definition(definition_key):
         raise NoSuchDefinition("OLX file {} not found in bundle {}.".format(  # lint-amnesty, pylint: disable=raise-missing-from
             definition_key.olx_path, definition_key.bundle_uuid,
         ))
-    node = etree.fromstring(xml_str)
+    node = etree.fromstring(xml_str, parser=lxml.etree.XMLParser(resolve_entities=False))
     return node

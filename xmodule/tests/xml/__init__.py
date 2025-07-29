@@ -14,6 +14,7 @@ from xblock.runtime import DictKeyValueStore, KvsFieldData
 from xmodule.mako_block import MakoDescriptorSystem
 from xmodule.modulestore.xml import CourseLocationManager
 from xmodule.x_module import XMLParsingSystem, policy_key
+import lxml.etree
 
 
 class InMemorySystem(XMLParsingSystem, MakoDescriptorSystem):  # pylint: disable=abstract-method
@@ -45,7 +46,7 @@ class InMemorySystem(XMLParsingSystem, MakoDescriptorSystem):  # pylint: disable
         """Parse `xml` as an XBlock, and add it to `self._blocks`"""
         self.get_asides = Mock(return_value=[])
         block = self.xblock_from_node(
-            etree.fromstring(xml),
+            etree.fromstring(xml, parser=lxml.etree.XMLParser(resolve_entities=False)),
             None,
             CourseLocationManager(self.course_id),
         )

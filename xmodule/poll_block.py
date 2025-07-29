@@ -29,6 +29,7 @@ from xmodule.x_module import (
     XModuleToXBlockMixin,
 )
 from xmodule.xml_block import XmlMixin
+import lxml.etree
 
 
 log = logging.getLogger(__name__)
@@ -223,7 +224,7 @@ class PollBlock(
         """Return an xml element representing to this definition."""
         poll_str = HTML('<{tag_name}>{text}</{tag_name}>').format(
             tag_name=self._tag_name, text=self.question)
-        xml_object = etree.fromstring(poll_str)
+        xml_object = etree.fromstring(poll_str, parser=lxml.etree.XMLParser(resolve_entities=False))
         xml_object.set('display_name', self.display_name)
 
         def add_child(xml_obj, answer):  # lint-amnesty, pylint: disable=unused-argument
@@ -237,7 +238,7 @@ class PollBlock(
                 text=answer_text,
                 tag_end=HTML('</{tag_name}>').format(tag_name=self._child_tag_name)
             )
-            child_node = etree.fromstring(child_str)
+            child_node = etree.fromstring(child_str, parser=lxml.etree.XMLParser(resolve_entities=False))
             xml_object.append(child_node)
 
         for answer in self.answers:
